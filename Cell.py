@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class Cell(Enum):
+class Cell(Enum):  #  enum para classificar cada celula da matriz e cada nodo do grafo
     WALL = 1
     SHELF = 2
     HALL = 3
