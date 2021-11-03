@@ -1,59 +1,67 @@
 import numpy as np
 from networkx import Graph
 from numpy import ndarray
+
 from Cell import Cell
+from Node import Node
+
 
 class GraphResolver:
     def __init__(self, matrix: ndarray):
-        self.matrix = matrix
+        self.node_matrix = matrix
         self.graph = Graph()
 
-    def encontrar_ligacoes(self, cell: Cell, coordinates):
-        r = -1
-        c = -1
+    def create_graph(self) -> Graph:
+        for cord, node in np.ndenumerate(self.node_matrix):
+            if is_not_wall(node):
+                self.find_paths(node, cord)
+        return self.graph
+
+    def find_paths(self, root: Node, coordinates: tuple[int, int]) -> None:
         row = coordinates[0]
         col = coordinates[1]
-        while r <= 1:
-            while c <= 1:
-                if self.out_of_bounds(row, col):
-                    actual_node = self.matrix[row+r][col+c]
-                    if is_node(actual_node):
-                        self.graph.add_edge(cell, actual_node)
-                c += 1
-            r += 1
 
-    def to_graph(self):
-        for cord, cell in np.ndenumerate(self.matrix):
-            if is_node(cell):
-                self.encontrar_ligacoes(cell, cord)
+        up = (row + 1, col)
+        down = (row - 1, col)
+        left = (row, col - 1)
+        right = (row, col + 1)
 
-    def out_of_bounds(self, row, col):
-        rows = self.matrix.shape[0]
-        cols = self.matrix.shape[1]
-        return (row > rows or row < 0) or (col > cols or col < 0)
+        for cord in [up, down, left, right]:
+            if not self.is_out_of_bounds(cord):
+                self.add_vertice(root, self.node_matrix[cord])
+
+    def add_vertice(self, root: Node, neighbor: Node) -> None:
+        if is_not_wall(neighbor):
+            self.graph.add_edge(root, neighbor)
+
+    def is_out_of_bounds(self, cord: tuple[int, int]):
+        rows = self.node_matrix.shape[0]
+        cols = self.node_matrix.shape[1]
+        return (cord[0] >= rows or cord[0] < 0) or (cord[1] >= cols or cord[1] < 0)
 
 
 def get_matrix_data(file_location: str) -> ndarray:
     str_matrix = np.genfromtxt(file_location, delimiter=',', dtype=str)
 
-    matrix = ndarray(shape=str_matrix.shape, dtype=Cell)
-    for i, cell in np.ndenumerate(str_matrix):
-        matrix[i] = transform_in_cell(cell)
+    matrix = ndarray(shape=str_matrix.shape, dtype=Node)
+    for cord, cell in np.ndenumerate(str_matrix):
+        cell = transform_in_cell(cell)
+        matrix[cord] = Node(cell, cord[0], cord[1])
     return matrix
 
 
 def transform_in_cell(cell: str) -> Cell:
     if cell.isnumeric():
-        return Cell.ESTANTE
+        return Cell.SHELF
     if "R" in cell:
-        return Cell.POSICAO_INICIAL
+        return Cell.INITIAL_POS
     if "X" in cell:
-        return Cell.POSICAO_ENTREGA
+        return Cell.DELIVER_POS
     if "-" in cell:
-        return Cell.PAREDE
+        return Cell.WALL
 
-    return Cell.CORREDOR
+    return Cell.HALL
 
 
-def is_node(cell: Cell) -> bool:
-    return cell is not Cell.PAREDE and cell is not Cell.ESTANTE
+def is_not_wall(node: Node) -> bool:
+    return node.cell_type is not Cell.WALL
