@@ -23,4 +23,8 @@ class GraphSearch(Search):
                 return path
             for adj in self.graph.adj[current]:
                 if (adj.x, adj.y) not in explored and (adj.x, adj.y) not in self.border:
-                    self.border.append(adj)
+                    if not self.get_node((adj.x, adj.y)).robot_number:
+                        self.border.append(adj)
+
+    def get_node(self, cord: [int, int]) -> Node:
+        return next(n for n in self.graph.nodes if n.x == cord[0] and n.y == cord[1])

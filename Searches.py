@@ -20,4 +20,4 @@ class Search(metaclass=abc.ABCMeta):
         if self.algorithm == Algorithm.IDS:
             return self.border.pop(0)  # ta incompleto precisa arrumar a iteratividade
         if self.algorithm == Algorithm.BFS:
-            return self.border.pop(-1)
+            return self.border.pop()
