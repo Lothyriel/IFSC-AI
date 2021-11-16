@@ -1,7 +1,4 @@
-import json
-import sys
 from typing import Dict
-
 from flask import Flask
 from flask_restful import Api, Resource
 from networkx import Graph

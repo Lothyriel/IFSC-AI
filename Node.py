@@ -6,8 +6,8 @@ class Node:   #  clase que representa cada nodo do grafo
 
     def __init__(self, cell_type: Cell, x: int, y: int):
         self.cell_type = cell_type
-        self.x = x
-        self.y = y
+        self.x: int = x
+        self.y: int = y
         self.robot_number = None
         if cell_type is Cell.INITIAL_POS:
             Node.initial_position_counter += 1
