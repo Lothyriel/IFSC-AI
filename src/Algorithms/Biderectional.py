@@ -1,5 +1,5 @@
-from Node import Node
-from Search import Search
+from src.Domain.Node import Node
+from src.Domain.Search import Search
 
 
 class Biderectional(Search):

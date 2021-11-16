@@ -1,14 +1,14 @@
 from typing import Dict
 
-from API.API import API
-from Algorithms.AStar import AStar
-from Algorithms.BFS import BFS
-from Algorithms.Biderectional import Biderectional
-from Algorithms.DFS import DFS
-from Algorithms.IDS import IDS
-from Delivery import Delivery
-from Node import Node
-from Search import Search, Algorithm
+from src.API.API import API
+from src.Algorithms.AStar import AStar
+from src.Algorithms.BFS import BFS
+from src.Algorithms.Biderectional import Biderectional
+from src.Algorithms.DFS import DFS
+from src.Algorithms.IDS import IDS
+from src.Domain.Delivery import Delivery
+from src.Domain.Node import Node
+from src.Domain.Search import Search, Algorithm
 
 
 def get_path(algorithm: type(Search), x: int, y: int) -> [Node]:  # retorna o caminho correto a partir dos dados enviados pela request do front end

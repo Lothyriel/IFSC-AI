@@ -1,8 +1,8 @@
 import numpy as np
 from networkx import Graph
 from numpy import ndarray
-from Cell import Cell
-from Node import Node
+from Domain.Cell import Cell
+from Domain.Node import Node
 
 
 class GraphFromMatrix:

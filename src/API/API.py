@@ -3,8 +3,8 @@ from flask_restful import Api, Resource
 from networkx import Graph
 
 import APIHelper as Helper
-from GraphFromMatrix import get_matrix_data, GraphFromMatrix
-from Search import Algorithm
+from src.Domain.Search import Algorithm
+from src.GraphFromMatrix import get_matrix_data, GraphFromMatrix
 
 
 class API(Resource):
@@ -26,11 +26,7 @@ def init_api() -> None:   # inicia a api localmente
     app.run(debug=True)
 
 
-def init_graph() -> None:  # inicia o grafo com o arquivo csv da matriz do armazém
-    node_matrix = get_matrix_data('../armazem.csv')
+def init_csv_graph() -> None:  # inicia o grafo com o arquivo csv da matriz do armazém
+    node_matrix = get_matrix_data('../Armazem.csv')
     API.graph = GraphFromMatrix(node_matrix).create_graph()
 
-
-if __name__ == '__main__':
-    init_graph()
-    init_api()

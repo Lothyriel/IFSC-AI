@@ -1,5 +1,5 @@
-from Node import Node
-from Search import Search, EmptyBorder
+from src.Domain.Node import Node
+from src.Domain.Search import Search, EmptyBorder
 
 
 class DFS(Search):
