@@ -1,4 +1,6 @@
 import abc
+from enum import Enum
+
 from networkx import Graph
 from Node import Node
 
@@ -15,6 +17,14 @@ class Search(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def search(self) -> [Node]:
         pass
+
+
+class Algorithm(Enum):
+    AStar = 0
+    BFS = 1
+    Biderectional = 2
+    DFS = 3
+    IDS = 4
 
 
 class EmptyBorder(Exception):

@@ -1,5 +1,4 @@
 from networkx import Graph
-
 from Algorithms.AStar import AStar
 from Algorithms.DFS import DFS
 from Cell import Cell
@@ -32,7 +31,7 @@ def test_csv():  # apenas um teste com o arquivo do armazem.csv
     node_matrix = get_matrix_data('armazem.csv')
     graph = GraphFromMatrix(node_matrix).create_graph()
     root = next(n for n in graph.nodes if n.robot_number == 1)
-    destiny = next(n for n in graph.nodes if n.x == 1 and n.y == 3)
+    destiny = [next(n for n in graph.nodes if n.x == 1 and n.y == 3)]
     path = DFS(root, destiny, graph).search()
     print(path)
 
@@ -41,7 +40,7 @@ def test_():  # apenas um teste com um grafo qualquer
     graph = create_graph()
 
     root = next(n for n in graph.nodes if n.robot_number == 1)
-    destiny = next(n for n in graph.nodes if n.cell_type is Cell.SHELF)
+    destiny = [next(n for n in graph.nodes if n.cell_type is Cell.SHELF)]
 
     path = DFS(root, destiny, graph).search()
     print(path)

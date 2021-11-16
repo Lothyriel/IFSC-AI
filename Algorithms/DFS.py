@@ -15,5 +15,5 @@ class DFS(Search):
             if current in self.destiny:
                 return path
             for adj in self.graph.adj[current]:
-                if (adj.x, adj.y) not in self.explored and (adj.x, adj.y) not in self.border:
+                if (adj.x, adj.y) not in self.explored or adj not in self.border:
                     self.border.append(adj)
