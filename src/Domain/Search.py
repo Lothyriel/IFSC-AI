@@ -13,6 +13,7 @@ class Search(metaclass=abc.ABCMeta):  # classe base para a implementacao das bus
         self.graph: Graph = graph
         self.path: list[Node] = []
         self.border: list[Node] = [self.root]
+        self.border1:list[Node] = [self.destiny]
         self.explored: Dict[Tuple[int, int]: Node] = {(self.root.x, self.root.y): self.root}
         self.current: Node = root
 
