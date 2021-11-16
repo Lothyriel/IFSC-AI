@@ -21,4 +21,3 @@ class Delivery:
         reverse_path_to_shelf = robot_to_destiny[::-1]
 
         return best_robot_to_shelf + robot_to_destiny + reverse_path_to_shelf
-
