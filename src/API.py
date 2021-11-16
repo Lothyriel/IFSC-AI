@@ -17,11 +17,11 @@ def init_parser():
 class API(Resource):  # classe da restul API
     def __init__(self, graph: Graph):
         self.graph: Graph = graph
-        self.helper = GraphHelper(self.graph)
+        self.graph_helper = GraphHelper(self.graph)
         self.parser = init_parser()
 
     def get(self):  # endpoint GET da api, retorna os dados do grafo
-        return {'nodes': self.helper.get_nodes_data()}, 200
+        return {'nodes': self.graph_helper.serialize()}, 200
 
     def post(self):  # retorna caminho das buscas conforme o header da request
         args = self.parser.parse_args()
@@ -29,7 +29,7 @@ class API(Resource):  # classe da restul API
         x: int = args['shelf_x']
         y: int = args['shelf_y']
         algorithm: Algorithm = get_algorithm(Algorithm(args['algorithm']))
-        return {'path': self.helper.get_path(algorithm, int(x), int(y))}, 200
+        return {'path': self.graph_helper.get_path(algorithm, int(x), int(y))}, 200
 
 
 def init_api(graph: Graph) -> None:   # inicia a api localmente
