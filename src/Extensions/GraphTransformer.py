@@ -66,7 +66,7 @@ class GraphTransformer:  # classe para transformar o arquivo csv em grafo
             if not (root.cell_type == Cell.SHELF and neighbor.cell_type == Cell.SHELF) and not neighbor.robot_number:  # nao adiciona caminhos de estantes para outras estantes
                 self.graph.add_edge(root, neighbor)                                                                    # e em nodos iniciais (contendo robos)
 
-    def is_out_of_bounds(self, cord: tuple[int, int]):  # metodo para garantir que só adicionaremos vertices no grafo que realmente existem dentro da matriz
+    def is_out_of_bounds(self, cord: tuple[int, int]) -> bool:  # metodo para garantir que só adicionaremos vertices no grafo que realmente existem dentro da matriz
         rows = self.node_matrix.shape[0]
         cols = self.node_matrix.shape[1]
         return (cord[0] >= rows or cord[0] < 0) or (cord[1] >= cols or cord[1] < 0)

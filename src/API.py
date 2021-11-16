@@ -1,3 +1,5 @@
+from typing import Tuple
+
 from flask import Flask
 from flask_restful import Api, Resource, reqparse
 from networkx import Graph
@@ -27,7 +29,7 @@ class API(Resource):  # classe da restul API
         self.graph: Graph = graph_helper.graph
         self.parser = init_parser()
 
-    def get(self):  # endpoint GET da api, retorna os dados do grafo
+    def get(self) -> Tuple[dict, int]:  # endpoint GET da api, retorna os dados do grafo
         data = {"nodes": self.graph_helper.serialize_graph(),
                 "x_limit": self.graph_helper.node_matrix.shape[0],
                 "y_limit": self.graph_helper.node_matrix.shape[1],
@@ -39,7 +41,7 @@ class API(Resource):  # classe da restul API
 
         return data, 200
 
-    def post(self):  # retorna caminho das buscas conforme o header da request
+    def post(self) -> Tuple[dict, int]:  # retorna caminho das buscas conforme o header da request
         args = self.parser.parse_args()
 
         x: int = args['shelf_x']

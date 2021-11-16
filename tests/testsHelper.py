@@ -4,7 +4,7 @@ from src.Domain.Cell import Cell
 from src.Domain.Node import Node
 
 
-def create_graph():
+def create_graph() -> Graph:
     graph = Graph()
     root = Node(Cell.INITIAL_POS, 0, 0)
     n1 = Node(Cell.HALL, 1, 0)

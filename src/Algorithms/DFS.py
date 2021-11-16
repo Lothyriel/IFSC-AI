@@ -8,7 +8,7 @@ class DFS(Search):
         while True:
             if not self.border:
                 raise EmptyBorder
-            current = self.border.pop()
+            current = self.border.pop()  # removendo os nodos da fronteira em forma de stack (LIFO)
             self.explored[(current.x, current.y)] = current
             self.path.append(current)
             if current in self.destiny:
