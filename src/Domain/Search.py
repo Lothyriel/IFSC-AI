@@ -2,17 +2,18 @@ import abc
 from enum import Enum
 
 from networkx import Graph
-from Node import Node
+from src.Domain.Node import Node
 
 
-class Search(metaclass=abc.ABCMeta):
+class Search(metaclass=abc.ABCMeta):  # classe base para a implementacao das buscas
     def __init__(self, root: Node, destiny: [Node], graph: Graph):
-        self.destiny = destiny
-        self.root = root
-        self.graph = graph
+        self.destiny: [Node] = destiny
+        self.root: Node = root
+        self.graph: Graph = graph
         self.border: [Node] = []
-        self.explored = {}
-        self.current = root
+        self.explored: dict[tuple[int, int]: Node] = {}
+        self.current: Node = root
+        self.path: [Node] = []
 
     @abc.abstractmethod
     def search(self) -> [Node]:

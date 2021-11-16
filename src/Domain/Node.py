@@ -1,4 +1,4 @@
-from Cell import Cell
+from src.Domain.Cell import Cell
 
 
 class Node:   #  clase que representa cada nodo do grafo
@@ -16,5 +16,5 @@ class Node:   #  clase que representa cada nodo do grafo
     def __str__(self) -> str:
         return f"{self.cell_type} {'' if not self.robot_number else self.robot_number} ({self.x}, {self.y})"
 
-    def serialize(self):
+    def serialize(self) -> dict:
         return {"x": self.x, "y": self.y, "cell_type": self.cell_type.value, "robot_number:": self.robot_number}

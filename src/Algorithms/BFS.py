@@ -16,11 +16,9 @@ class BFS(Search):
         while queue:
             # retira o último vértice inserido
             s = queue.pop(0)
-            # print(s, " ")
             caminho.append(s)
             # Verificando vertice adjacentes. Se um adjacente não foi visitado, marca como true e adiciona a fila para visitar
             for i in self.graph.adj[s]:
-                # print(visited[i])
                 if not visited[i]:
                     queue.append(i)
                     visited[i] = True

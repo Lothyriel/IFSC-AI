@@ -4,17 +4,17 @@ from src.Domain.Search import Search, EmptyBorder
 
 class AStar(Search):
     def search(self) -> [Node]:  #  busca padrao em grafo
-        self.border = [self.root]
-        self.explored = {(self.root.x, self.root.y): self.root}
-        path = [self.root]
+        self.border.append(self.root)
+        self.explored[(self.root.x, self.root.y)] = self.root
+        self.path.append(self.root)
         while True:
             if not self.border:
                 raise EmptyBorder
             self.current = self.heuristic_function()
             self.explored[(self.current.x, self.current.y)] = self.current
-            path.append(self.current)
+            self.path.append(self.current)
             if self.current in self.destiny:
-                return path
+                return self.path
             for adj in self.graph.adj[self.current]:
                 if (adj.x, adj.y) not in self.explored or adj not in self.border:
                     self.border.append(adj)

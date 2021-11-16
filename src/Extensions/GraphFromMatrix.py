@@ -1,11 +1,12 @@
 import numpy as np
 from networkx import Graph
 from numpy import ndarray
-from Domain.Cell import Cell
-from Domain.Node import Node
+
+from src.Domain.Cell import Cell
+from src.Domain.Node import Node
 
 
-class GraphFromMatrix:
+class GraphFromMatrix:  # classe para transformar o arquivo csv em grafo
     def __init__(self, matrix: ndarray):
         self.node_matrix = matrix
         self.graph = Graph()
@@ -29,18 +30,18 @@ class GraphFromMatrix:
             if not self.is_out_of_bounds(cord):
                 self.add_vertice(root, self.node_matrix[cord])
 
-    def add_vertice(self, root: Node, neighbor: Node) -> None:  #  nao adiciona paredes nas conexoes dos grafos
+    def add_vertice(self, root: Node, neighbor: Node) -> None:  # nao adiciona paredes nas conexoes dos grafos
         if is_not_wall(neighbor):
             if not (root.cell_type == Cell.SHELF and neighbor.cell_type == Cell.SHELF) and not neighbor.robot_number:
                 self.graph.add_edge(root, neighbor)
 
-    def is_out_of_bounds(self, cord: tuple[int, int]):  #  metodo para garantir que só adicionaremos vertices no grafo que realmente existem dentro da matriz
+    def is_out_of_bounds(self, cord: tuple[int, int]):  # metodo para garantir que só adicionaremos vertices no grafo que realmente existem dentro da matriz
         rows = self.node_matrix.shape[0]
         cols = self.node_matrix.shape[1]
         return (cord[0] >= rows or cord[0] < 0) or (cord[1] >= cols or cord[1] < 0)
 
 
-def get_matrix_data(file_location: str) -> ndarray:  #  pega os dados de um arquivo csv e os transforma em uma matriz de Cell
+def get_matrix_data(file_location: str) -> ndarray:  # transforma a matriz de formato csv uma matriz de Cell
     Node.initial_position_counter = 0
 
     str_matrix = np.genfromtxt(file_location, delimiter=',', dtype=str)
@@ -52,7 +53,7 @@ def get_matrix_data(file_location: str) -> ndarray:  #  pega os dados de um arqu
     return matrix
 
 
-def transform_in_cell(cell: str) -> Cell:  #  transforma a representacao de string para um enum
+def transform_in_cell(cell: str) -> Cell:  # transforma a representacao de string para um enum
     if cell.isnumeric():
         return Cell.SHELF
     if "R" in cell:
@@ -67,3 +68,8 @@ def transform_in_cell(cell: str) -> Cell:  #  transforma a representacao de stri
 
 def is_not_wall(node: Node) -> bool:
     return node.cell_type is not Cell.WALL
+
+
+def init_csv_graph(file_location: str) -> Graph:  # inicia o grafo a partir de um arquivo csv de uma matriz
+    node_matrix = get_matrix_data(file_location)
+    return GraphFromMatrix(node_matrix).create_graph()
