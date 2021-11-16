@@ -1,10 +1,11 @@
 from networkx import Graph
 
 from Algorithms.AStar import AStar
+from Algorithms.DFS import DFS
 from Cell import Cell
 from GraphFromMatrix import get_matrix_data, GraphFromMatrix
 from Node import Node
-from Algorithms.buscaLargura import Largura
+from Algorithms.BFS import BFS
 
 
 def create_graph():
@@ -32,7 +33,7 @@ def test_csv():  # apenas um teste com o arquivo do armazem.csv
     graph = GraphFromMatrix(node_matrix).create_graph()
     root = next(n for n in graph.nodes if n.robot_number == 1)
     destiny = next(n for n in graph.nodes if n.x == 1 and n.y == 3)
-    path = GraphSearch(root, destiny, Algorithm.BFS, graph).search()
+    path = DFS(root, destiny, graph).search()
     print(path)
 
 
@@ -42,7 +43,7 @@ def test_():  # apenas um teste com um grafo qualquer
     root = next(n for n in graph.nodes if n.robot_number == 1)
     destiny = next(n for n in graph.nodes if n.cell_type is Cell.SHELF)
 
-    path = GraphSearch(root, destiny, graph).search()
+    path = DFS(root, destiny, graph).search()
     print(path)
 
 
@@ -52,7 +53,7 @@ def test_largura_robo_ate_prateleira():  # apenas um teste com um grafo qualquer
     root = next(n for n in graph.nodes if n.robot_number == 1)
     destiny = [next(n for n in graph.nodes if n.cell_type is Cell.SHELF)]
 
-    path = Largura(root, destiny, graph).search()
+    path = BFS(root, destiny, graph).search()
     print(path)
 
 
@@ -61,7 +62,7 @@ def test_largura_achar_melhor_robo():  # apenas um teste com um grafo qualquer
     root = next(n for n in graph.nodes if n.cell_type is Cell.SHELF)
     destiny = [n for n in graph.nodes if n.robot_number]
 
-    path = Largura(root, destiny, graph).search()
+    path = BFS(root, destiny, graph).search()
     print(path)
 
 

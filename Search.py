@@ -17,3 +17,7 @@ class Search(metaclass=abc.ABCMeta):
         pass
 
 
+class EmptyBorder(Exception):
+    pass
+
+

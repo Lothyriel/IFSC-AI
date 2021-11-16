@@ -2,7 +2,7 @@ from Node import Node
 from Search import Search
 
 
-class Largura(Search):
+class BFS(Search):
     def search(self) -> [Node]:
         s = self.root
         # marca todos os vértices como não visitados.

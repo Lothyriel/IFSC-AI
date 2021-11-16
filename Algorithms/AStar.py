@@ -1,19 +1,15 @@
-from networkx import Graph
 from Node import Node
-from Search import Search
+from Search import Search, EmptyBorder
 
 
 class AStar(Search):
-    def __init__(self, root: Node, destiny: [Node], graph: Graph):
-        super().__init__(root, destiny, graph)
-
     def search(self) -> [Node]:  #  busca padrao em grafo
         self.border = [self.root]
         self.explored = {(self.root.x, self.root.y): self.root}
         path = [self.root]
         while True:
             if not self.border:
-                raise AttributeError
+                raise EmptyBorder
             self.current = self.heuristic_function()
             self.explored[(self.current.x, self.current.y)] = self.current
             path.append(self.current)
@@ -26,6 +22,4 @@ class AStar(Search):
     def heuristic_function(self) -> Node:
         priority_queue = set()
         [priority_queue.add(((abs(d.x - adj.x) + abs(d.y - adj.y)), adj)) for d in self.destiny for adj in self.graph.adj[self.current] if (adj.x, adj.y) not in self.explored]
-        priority_queue = list(priority_queue)
-        priority_queue.sort(key=lambda k: k[0])
-        return priority_queue.pop(0)[1]
+        return sorted(priority_queue, key=lambda k: k[0]).pop(0)[1]
