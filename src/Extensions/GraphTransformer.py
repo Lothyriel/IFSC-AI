@@ -1,3 +1,5 @@
+from typing import Tuple
+
 import numpy as np
 from networkx import Graph
 from numpy import ndarray
@@ -43,10 +45,10 @@ class GraphTransformer:  # classe para transformar o arquivo csv em grafo
     def create_graph(self) -> Graph:  #  transforma a matriz de Cell em um grafo nao direcional
         for cord, node in np.ndenumerate(self.node_matrix):
             if is_not_wall(node):
-                self.find_paths(node, cord)
+                self.find_vertices(node, cord)
         return self.graph
 
-    def find_paths(self, root: Node, coordinates: tuple[int, int]) -> None:  #  tenta adicionar um vertice a partir de cada direcao partindo do nodo atual
+    def find_vertices(self, root: Node, coordinates: Tuple[int, int]) -> None:  #  tenta adicionar um vertice a partir de cada direcao partindo do nodo atual
         row = coordinates[0]
         col = coordinates[1]
 
@@ -59,10 +61,10 @@ class GraphTransformer:  # classe para transformar o arquivo csv em grafo
             if not self.is_out_of_bounds(cord):
                 self.add_vertice(root, self.node_matrix[cord])
 
-    def add_vertice(self, root: Node, neighbor: Node) -> None:  # nao adiciona paredes nas conexoes dos grafos
-        if is_not_wall(neighbor):
-            if not (root.cell_type == Cell.SHELF and neighbor.cell_type == Cell.SHELF) and not neighbor.robot_number:
-                self.graph.add_edge(root, neighbor)
+    def add_vertice(self, root: Node, neighbor: Node) -> None:
+        if is_not_wall(neighbor):  # nao adiciona paredes nas conexoes dos grafos
+            if not (root.cell_type == Cell.SHELF and neighbor.cell_type == Cell.SHELF) and not neighbor.robot_number:  # nao adiciona caminhos de estantes para outras estantes
+                self.graph.add_edge(root, neighbor)                                                                    # e em nodos iniciais (contendo robos)
 
     def is_out_of_bounds(self, cord: tuple[int, int]):  # metodo para garantir que só adicionaremos vertices no grafo que realmente existem dentro da matriz
         rows = self.node_matrix.shape[0]

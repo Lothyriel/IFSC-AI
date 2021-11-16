@@ -4,8 +4,7 @@ from src.Domain.Search import Search
 
 
 class DFS(Search):
-    def search(self) -> [Node]:  # busca padrao em grafo
-        self.border = [self.root]
+    def search(self) -> list[Node]:  # busca padrao em grafo
         while True:
             if not self.border:
                 raise EmptyBorder
@@ -15,5 +14,5 @@ class DFS(Search):
             if current in self.destiny:
                 return self.path
             for adj in self.graph.adj[current]:
-                if (adj.x, adj.y) not in self.explored or adj not in self.border:
+                if (adj.x, adj.y) not in self.explored and adj not in self.border:
                     self.border.append(adj)

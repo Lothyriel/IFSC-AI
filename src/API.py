@@ -33,7 +33,7 @@ class API(Resource):  # classe da restul API
                 "y_limit": self.graph_helper.node_matrix.shape[1],
                 "search_instructions": {
                     "request_headers": '{"shelf_x": int, "shelf_y": int, "search_algorithm": Enum}',
-                    "algorithm_enum_values": {"AStar": 0, "BFS": 1, "Biderectional": 2, "DFS": 3, "IDS": 4}
+                    "algorithm_enum_values": {e.value: e.name for e in Algorithm}
                     }
                 }
 
@@ -45,4 +45,12 @@ class API(Resource):  # classe da restul API
         x: int = args['shelf_x']
         y: int = args['shelf_y']
         algorithm: Algorithm = Algorithm(args['search_algorithm'])
-        return {'path': self.graph_helper.get_path(algorithm, int(x), int(y))}, 200
+        delivery = self.graph_helper.get_delivery(algorithm, int(x), int(y))
+        path = delivery.get_path()
+        data = {'path': [node.serialize() for node in path],
+                'robot': delivery.selected_robot.robot_number,
+                'shelf': delivery.shelf.serialize(),
+                'path_length': len(path),
+                'search_algorithm': algorithm.value
+                }
+        return data, 200

@@ -1,23 +1,23 @@
 import abc
 from enum import Enum
 from typing import Dict, Tuple
-
 from networkx import Graph
+
 from src.Domain.Node import Node
 
 
 class Search(metaclass=abc.ABCMeta):  # classe base para a implementacao das buscas
-    def __init__(self, root: Node, destiny: [Node], graph: Graph):
-        self.destiny: [Node] = destiny
+    def __init__(self, root: Node, destiny: list[Node], graph: Graph):
+        self.destiny: list[Node] = destiny
         self.root: Node = root
         self.graph: Graph = graph
-        self.border: [Node] = []
-        self.explored: Dict[Tuple[int, int]: Node] = {}
+        self.path: list[Node] = []
+        self.border: list[Node] = [self.root]
+        self.explored: Dict[Tuple[int, int]: Node] = {(self.root.x, self.root.y): self.root}
         self.current: Node = root
-        self.path: [Node] = []
 
     @abc.abstractmethod
-    def search(self) -> [Node]:
+    def search(self) -> list[Node]:
         pass
 
 

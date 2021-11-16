@@ -26,8 +26,8 @@ class GraphHelper:  # classe para agrupar metodos de extensao do grafo
         s_n["adjacent_nodes"] = [adj.serialize() for adj in self.graph.adj[node]]
         return s_n
 
-    def get_path(self, algorithm: Algorithm, x: int, y: int) -> [Node]:  # retorna o caminho correto a partir dos dados enviados pela request do front end
+    def get_delivery(self, algorithm: Algorithm, x: int, y: int) -> Delivery:  # retorna a encomenda a partir dos dados enviados pela request do front end
         delivery_shelf = next(node for node in self.graph.nodes if node.x == x and node.y == y)
         search_algorithm = get_algorithm(algorithm)
-        return Delivery(delivery_shelf, search_algorithm, self.graph).get_delivery_path()
+        return Delivery(delivery_shelf, search_algorithm, self.graph)
 
