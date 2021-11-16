@@ -4,7 +4,7 @@ from src.Domain.Search import Search
 
 class Delivery:  # classe que trata cada entrega
     def __init__(self, destiny_shelf: Node, search: type(Search)):
-        self.search = search
+        self.search = search()
         self.robots = filter(n for n in search.graph.nodes if n.robot_number)
         self.algorithm = type(search)
         self.deliver_pos = destiny_shelf

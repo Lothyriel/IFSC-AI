@@ -6,22 +6,20 @@ class BFS(Search):
     def search(self) -> [Node]:
         s = self.root
         # marca todos os vértices como não visitados.
-        visited = {}
-        for n in self.graph.nodes:
-            visited[n] = False
-        caminho = []
-        queue = [s]
+        visited = {node: False for node in self.graph.nodes}
+        self.border.append(s)
         # pega o nó de origem, marca como visitado e insere ele na fila
         visited[s] = True
-        while queue:
+
+        while self.border:
             # retira o último vértice inserido
-            s = queue.pop(0)
-            caminho.append(s)
+            s = self.border.pop(0)
+            self.path.append(s)
             # Verificando vertice adjacentes. Se um adjacente não foi visitado, marca como true e adiciona a fila para visitar
             for i in self.graph.adj[s]:
                 if not visited[i]:
-                    queue.append(i)
+                    self.border.append(i)
                     visited[i] = True
                 if s in self.destiny:
-                    return caminho
+                    return self.path
 
