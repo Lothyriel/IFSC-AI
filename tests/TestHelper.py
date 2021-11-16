@@ -1,10 +1,9 @@
 from networkx import Graph
-
 from src.Domain.Cell import Cell
 from src.Domain.Node import Node
 
 
-def create_graph() -> Graph:
+def create_test_graph() -> Graph:
     graph = Graph()
     root = Node(Cell.INITIAL_POS, 0, 0)
     n1 = Node(Cell.HALL, 1, 0)
@@ -22,3 +21,15 @@ def create_graph() -> Graph:
     graph.add_edge(n2, n6)
 
     return graph
+
+
+def is_equal(expected_path: list[Node], path: list[Node]):
+    return all(n in path for n in expected_path)
+
+
+class TestHelper:
+    def __init__(self):
+        self.graph: Graph = create_test_graph()
+
+    def get_node(self, x: int, y: int):
+        return next(n for n in self.graph.nodes if n.x == x and n.y == y)

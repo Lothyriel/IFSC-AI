@@ -34,7 +34,7 @@ class API(Resource):  # classe da restul API
                 "x_limit": self.graph_helper.node_matrix.shape[0],
                 "y_limit": self.graph_helper.node_matrix.shape[1],
                 "search_instructions": {
-                    "request_headers": '{"shelf_x": int, "shelf_y": int, "search_algorithm": Enum}',
+                    "request_headers": '{shelf_x: int, shelf_y: int, search_algorithm: Enum}',
                     "algorithm_enum_values": {e.value: e.name for e in Algorithm}
                     }
                 }
@@ -47,6 +47,7 @@ class API(Resource):  # classe da restul API
         x: int = args['shelf_x']
         y: int = args['shelf_y']
         algorithm: Algorithm = Algorithm(args['search_algorithm'])
+
         delivery = self.graph_helper.get_delivery(algorithm, int(x), int(y))
         path = delivery.get_path()
         data = {'path': [node.serialize() for node in path],

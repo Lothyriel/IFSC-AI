@@ -13,6 +13,7 @@ class Node:   #  clase que representa cada nodo do grafo
         self.robot_number: Any = None
         if cell_type is Cell.INITIAL_POS:
             Node.initial_position_counter += 1
+            print(Node.initial_position_counter)
             self.robot_number = Node.initial_position_counter
 
     def __str__(self) -> str:
