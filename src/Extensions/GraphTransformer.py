@@ -6,7 +6,36 @@ from src.Domain.Cell import Cell
 from src.Domain.Node import Node
 
 
-class GraphFromMatrix:  # classe para transformar o arquivo csv em grafo
+def get_matrix_data(file_location: str) -> ndarray:  # transforma a matriz de formato csv uma matriz de Cell
+    Node.initial_position_counter = 0
+
+    str_matrix = np.genfromtxt(file_location, delimiter=',', dtype=str)
+
+    matrix = ndarray(shape=str_matrix.shape, dtype=Node)
+    for cord, cell in np.ndenumerate(str_matrix):
+        cell = transform_in_cell(cell)
+        matrix[cord] = Node(cell, cord[0], cord[1])
+    return matrix
+
+
+def transform_in_cell(cell: str) -> Cell:  # transforma a representacao de string para um enum
+    if cell.isnumeric():
+        return Cell.SHELF
+    if "R" in cell:
+        return Cell.INITIAL_POS
+    if "X" in cell:
+        return Cell.DELIVER_POS
+    if "-" in cell:
+        return Cell.WALL
+
+    return Cell.HALL
+
+
+def is_not_wall(node: Node) -> bool:
+    return node.cell_type is not Cell.WALL
+
+
+class GraphTransformer:  # classe para transformar o arquivo csv em grafo
     def __init__(self, matrix: ndarray):
         self.node_matrix = matrix
         self.graph = Graph()
@@ -39,37 +68,3 @@ class GraphFromMatrix:  # classe para transformar o arquivo csv em grafo
         rows = self.node_matrix.shape[0]
         cols = self.node_matrix.shape[1]
         return (cord[0] >= rows or cord[0] < 0) or (cord[1] >= cols or cord[1] < 0)
-
-
-def get_matrix_data(file_location: str) -> ndarray:  # transforma a matriz de formato csv uma matriz de Cell
-    Node.initial_position_counter = 0
-
-    str_matrix = np.genfromtxt(file_location, delimiter=',', dtype=str)
-
-    matrix = ndarray(shape=str_matrix.shape, dtype=Node)
-    for cord, cell in np.ndenumerate(str_matrix):
-        cell = transform_in_cell(cell)
-        matrix[cord] = Node(cell, cord[0], cord[1])
-    return matrix
-
-
-def transform_in_cell(cell: str) -> Cell:  # transforma a representacao de string para um enum
-    if cell.isnumeric():
-        return Cell.SHELF
-    if "R" in cell:
-        return Cell.INITIAL_POS
-    if "X" in cell:
-        return Cell.DELIVER_POS
-    if "-" in cell:
-        return Cell.WALL
-
-    return Cell.HALL
-
-
-def is_not_wall(node: Node) -> bool:
-    return node.cell_type is not Cell.WALL
-
-
-def init_csv_graph(file_location: str) -> Graph:  # inicia o grafo a partir de um arquivo csv de uma matriz
-    node_matrix = get_matrix_data(file_location)
-    return GraphFromMatrix(node_matrix).create_graph()
