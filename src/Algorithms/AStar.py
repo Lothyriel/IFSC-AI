@@ -1,5 +1,6 @@
+from src.Domain.Exceptions import EmptyBorder
 from src.Domain.Node import Node
-from src.Domain.Search import Search, EmptyBorder
+from src.Domain.Search import Search
 
 
 class AStar(Search):
