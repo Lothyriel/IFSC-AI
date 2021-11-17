@@ -15,8 +15,8 @@ def init_api(helper: GraphHelper) -> None:  # inicia a api localmente
     port = int(os.environ.get("PORT", 5000))
     app = Flask(__name__)
     api = Api(app)
-    api.add_resource(API, '/api', resource_class_kwargs={'graph_helper': helper})
     CORS(app)
+    api.add_resource(API, '/api', resource_class_kwargs={'graph_helper': helper})
     app.run(host='0.0.0.0', port=port)
 
     @app.after_request
@@ -90,7 +90,9 @@ class API(Resource):  # classe da restul API
         shelf = next(n for n in self.graph.nodes if n.x == x and n.y == y)
         if shelf.cell_type is not Cell.SHELF:
             return False, f"{x},{y} are not coordinates of a shelf"  # lança um bad request se as coordenadas enviadas não forem de uma prateleira
-        if algorithm == Algorithm.Biderectional and (kwargs["algorithm_a"] == Algorithm.Biderectional or kwargs["algorithm_b"] == Algorithm.Biderectional):
-            return False, "Cant do a bidirectional search with biderectional search"  # lança um bad request se for selecionado busca bidirecional com busca direcional
-
+        if algorithm == Algorithm.Biderectional:
+            if kwargs["algorithm_a"] == Algorithm.Biderectional or kwargs["algorithm_b"] == Algorithm.Biderectional:
+                return False, "Cant do a bidirectional search with biderectional search"  # lança um bad request se for selecionado busca bidirecional com busca direcional
+            elif not (kwargs["algorithm_a"] and kwargs["algorithm_b"]):
+                return False, "Cant do a bidirectional search without two algorithms"
         return True, ""
