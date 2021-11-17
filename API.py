@@ -2,7 +2,6 @@ import os
 from typing import Tuple, Optional
 
 from flask import Flask
-from flask_cors import CORS
 from flask_restful import Api, reqparse
 from flask_restful.utils.cors import crossdomain
 
@@ -12,7 +11,6 @@ from src.Extensions.GraphHelper import GraphHelper
 from src.Extensions.GraphTransformer import GraphTransformer, get_matrix_data
 
 app = Flask(__name__)
-CORS(app)
 
 
 def init_parser():  # inicia o new_parser dos headers do POST
@@ -25,6 +23,7 @@ def init_parser():  # inicia o new_parser dos headers do POST
     return new_parser
 
 
+@crossdomain(origin='http://192.168.1.30:5000/', headers='Content-Type')
 def get_kwargs(args: dict) -> dict:
     aa = args['algorithm_a']
     ab = args['algorithm_b']
@@ -33,6 +32,7 @@ def get_kwargs(args: dict) -> dict:
     return {"algorithm_a": algorithm_a, "algorithm_b": algorithm_b}
 
 
+@crossdomain(origin='http://192.168.1.30:5000/', headers='Content-Type')
 @app.route('/api', methods=['GET'])
 def get() -> Tuple[dict, int]:  # endpoint GET da api, retorna os dados do grafo
     data = {"nodes": helper.serialize_graph(),
