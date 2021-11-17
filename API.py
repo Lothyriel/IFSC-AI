@@ -73,7 +73,7 @@ def real_post():
     return data
 
 
-@app.route('/api', methods=['POST, OPTIONS'])
+@app.route('/api', methods=['POST', 'OPTIONS'])
 def post():  # retorna caminho das buscas conforme o header da request
     if request.method == "OPTIONS":
         return _build_cors_preflight_response()
