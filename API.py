@@ -1,9 +1,9 @@
 import os
 from typing import Tuple, Optional
 
-from flask import Flask, request, make_response, jsonify
+from flask import Flask, make_response
+from flask_cors import cross_origin, CORS
 from flask_restful import Api, reqparse
-from flask_restful.utils.cors import crossdomain
 
 from src.Domain.Cell import Cell
 from src.Domain.Search import Algorithm
@@ -11,6 +11,7 @@ from src.Extensions.GraphHelper import GraphHelper
 from src.Extensions.GraphTransformer import GraphTransformer, get_matrix_data
 
 app = Flask(__name__)
+CORS(app)
 
 
 def init_parser():  # inicia o new_parser dos headers do POST
@@ -23,7 +24,6 @@ def init_parser():  # inicia o new_parser dos headers do POST
     return new_parser
 
 
-@crossdomain(origin='http://192.168.1.30:5000/', headers='Content-Type')
 def get_kwargs(args: dict) -> dict:
     aa = args['algorithm_a']
     ab = args['algorithm_b']
@@ -32,7 +32,6 @@ def get_kwargs(args: dict) -> dict:
     return {"algorithm_a": algorithm_a, "algorithm_b": algorithm_b}
 
 
-@crossdomain(origin='http://192.168.1.30:5000/', headers='Content-Type')
 @app.route('/api', methods=['GET'])
 def get() -> Tuple[dict, int]:  # endpoint GET da api, retorna os dados do grafo
     data = {"nodes": helper.serialize_graph(),
@@ -48,7 +47,8 @@ def get() -> Tuple[dict, int]:  # endpoint GET da api, retorna os dados do grafo
     return data, 200
 
 
-def real_post():
+@app.route('/api', methods=['POST'])
+def post():  # retorna caminho das buscas conforme o header da request
     args = parser.parse_args()
 
     x: int = args['shelf_x']
@@ -59,7 +59,7 @@ def real_post():
 
     ensured = ensure_valid_delivery(x, y, algorithm, kwargs)
     if not ensured[0]:
-        return {"error_message": ensured[1]}, 400
+        return {"error_message": ensured[1]}
 
     delivery = helper.get_delivery(algorithm, int(x), int(y), kwargs)
 
@@ -70,17 +70,9 @@ def real_post():
             'path_length': len(path),
             'search_algorithm': algorithm.value
             }
-    return data
-
-
-@app.route('/api', methods=['POST', 'OPTIONS'])
-def post():  # retorna caminho das buscas conforme o header da request
-    if request.method == "OPTIONS":
-        return _build_cors_preflight_response()
-    elif request.method == "POST":
-        return _corsify_actual_response(jsonify(real_post()))
-    else:
-        raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))
+    response = make_response(data, 200)
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    return response
 
 
 def _build_cors_preflight_response():
