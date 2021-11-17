@@ -14,18 +14,21 @@ class Delivery:  # classe que trata cada entrega
         self.delivery_pos: Node = next(n for n in graph.nodes if n.cell_type is Cell.DELIVER_POS)
         self.graph: Graph = graph
         self.kwargs: dict = kwargs
+        self.path: list[Node] = []
 
         self.selected_robot: Optional[Node] = None
 
-    def get_path(self) -> list[Node]:
+    def get_path(self) -> None:
         best_robot_to_shelf = self.get_best_robot_path()  # procura o caminho do melhor robô até a prateleira
+        self.path += best_robot_to_shelf
 
         shelf_to_delivery_pos = self.search_algorithm(self.shelf, [self.delivery_pos], self.graph, self.kwargs).search()  # procura o caminho da prateleira até o destino de entrega
         back_to_shelf = shelf_to_delivery_pos[::-1]  # inverte o caminho para obter o caminho de volta para o lugar original da prateleira
+        self.path += shelf_to_delivery_pos[1:]
 
-        self.move_robot()
+        self.path += back_to_shelf[1:]  # soma os caminhos para obter o caminho final
 
-        return best_robot_to_shelf + shelf_to_delivery_pos[1:] + back_to_shelf[1:]  # soma os caminhos para obter o caminho final
+        self.move_robot()  # move a localizacao do robo no sistema apos terminar uma entrega
 
     def move_robot(self):
         robot_number = self.selected_robot.robot_number

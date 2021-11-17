@@ -5,6 +5,7 @@ from numpy import ndarray
 
 import src.Algorithms
 from src.Domain.Delivery import Delivery
+from src.Domain.Exceptions import IDSMaxDepth
 from src.Domain.Node import Node
 from src.Domain.Search import Algorithm, Search
 

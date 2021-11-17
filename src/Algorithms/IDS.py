@@ -5,27 +5,26 @@ from src.Domain.Search import Search
 
 class IDS(Search):
     def search(self) -> list[Node]:  # busca padrao em grafo
-        if not self.iddfs(self.root, self.destiny, 100):
-            raise IDSMaxDepth
-        return self.back_tracking()
-
-    def dls(self, src, target, max_depth):
-        self.search_path.append(src)
-        if src in target:
-            return True
-
-        if max_depth <= 0:
-            self.search_path = []
-            return False
-
-        for i in self.graph[src]:
-            i.parent = src
-            if self.dls(i, target, max_depth - 1):
-                return True
-        return False
-
-    def iddfs(self, src, target, max_depth):
+        max_depth: int = self.kwargs["max_depth"]
         for i in range(max_depth):
-            if self.dls(src, target, i):
-                return True
-        return False
+            self.search_path = []
+            depth = 0
+            while True:
+                if not self.border:
+                    raise EmptyBorder
+                self.current = self.border.pop()  # removendo os nodos da fronteira em forma de stack (LIFO)
+                self.explored[(self.current.x, self.current.y)] = self.current
+                self.search_path.append(self.current)
+                if self.current in self.destiny:
+                    return self.back_tracking()
+
+                for adj in self.graph.adj[self.current]:
+                    if (adj.x, adj.y) not in self.explored and adj not in self.border:
+                        self.border.append(adj)
+                        adj.parent = self.current
+
+                depth += 1
+                if depth > i:
+                    break
+
+        raise IDSMaxDepth()
