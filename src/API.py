@@ -2,6 +2,7 @@ import os
 from typing import Tuple
 
 from flask import Flask
+from flask_cors import CORS
 from flask_restful import Api, Resource, reqparse
 from networkx import Graph
 
@@ -13,8 +14,9 @@ def init_api(helper: GraphHelper) -> None:  # inicia a api localmente
     port = int(os.environ.get("PORT", 5000))
     app = Flask(__name__)
     api = Api(app)
-    api.add_resource(API, '/api/*', resource_class_kwargs={'graph_helper': helper})
-    app.run(host='0.0.0.0', port=port)
+    api.add_resource(API, '/api', resource_class_kwargs={'graph_helper': helper})
+    cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+    app.run(host='0.0.0.0', port=port, cors=cors)
 
 
 def init_parser():  # inicia o parser dos headers do POST
