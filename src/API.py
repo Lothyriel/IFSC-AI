@@ -1,3 +1,4 @@
+import os
 from typing import Tuple
 
 from flask import Flask
@@ -9,10 +10,11 @@ from src.Extensions.GraphHelper import GraphHelper, get_algorithm
 
 
 def init_api(helper: GraphHelper) -> None:  # inicia a api localmente
+    port = int(os.environ.get("PORT", 5000))
     app = Flask(__name__)
     api = Api(app)
     api.add_resource(API, '/api', resource_class_kwargs={'graph_helper': helper})
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=port)
 
 
 def init_parser():  # inicia o parser dos headers do POST
