@@ -11,6 +11,7 @@ from src.Extensions.GraphHelper import GraphHelper
 from src.Extensions.GraphTransformer import GraphTransformer, get_matrix_data
 
 app = Flask(__name__)
+CORS(app)
 
 
 def init_parser():  # inicia o new_parser dos headers do POST
@@ -94,7 +95,6 @@ if __name__ == '__main__':  # inicializando o grafo com uma matriz guardada no a
     port = int(os.environ.get("PORT", 5000))
     api = Api(app)
     parser = init_parser()
-    CORS(app)
 
     node_matrix = get_matrix_data("armazem.csv")
     graph = GraphTransformer(node_matrix).create_graph()
