@@ -1,7 +1,7 @@
 import os
 from typing import Tuple, Optional
 
-from flask import Flask
+from flask import Flask, request, make_response, jsonify
 from flask_restful import Api, reqparse
 from flask_restful.utils.cors import crossdomain
 
@@ -48,8 +48,7 @@ def get() -> Tuple[dict, int]:  # endpoint GET da api, retorna os dados do grafo
     return data, 200
 
 
-@app.route('/api', methods=['POST'])
-def post() -> Tuple[dict, int]:  # retorna caminho das buscas conforme o header da request
+def real_post():
     args = parser.parse_args()
 
     x: int = args['shelf_x']
@@ -71,7 +70,30 @@ def post() -> Tuple[dict, int]:  # retorna caminho das buscas conforme o header 
             'path_length': len(path),
             'search_algorithm': algorithm.value
             }
-    return data, 200
+    return data
+
+
+@app.route('/api', methods=['POST'])
+def post():  # retorna caminho das buscas conforme o header da request
+    if request.method == "OPTIONS":
+        return _build_cors_preflight_response()
+    elif request.method == "POST":
+        return _corsify_actual_response(jsonify(real_post()))
+    else:
+        raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))
+
+
+def _build_cors_preflight_response():
+    response = make_response()
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add('Access-Control-Allow-Headers', "*")
+    response.headers.add('Access-Control-Allow-Methods', "*")
+    return response
+
+
+def _corsify_actual_response(response):
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
 
 
 def ensure_valid_delivery(x: int, y: int, algorithm: Algorithm, kwargs: dict) -> Tuple[bool, str]:
