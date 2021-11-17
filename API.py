@@ -4,6 +4,7 @@ from typing import Tuple, Optional
 from flask import Flask
 from flask_cors import CORS
 from flask_restful import Api, reqparse
+from flask_restful.utils.cors import crossdomain
 
 from src.Domain.Cell import Cell
 from src.Domain.Search import Algorithm
@@ -30,12 +31,6 @@ def get_kwargs(args: dict) -> dict:
     algorithm_a: Optional[Algorithm] = Algorithm(aa) if aa else None
     algorithm_b: Optional[Algorithm] = Algorithm(ab) if ab else None
     return {"algorithm_a": algorithm_a, "algorithm_b": algorithm_b}
-
-
-@app.after_request
-def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    return response
 
 
 @app.route('/api', methods=['GET'])
