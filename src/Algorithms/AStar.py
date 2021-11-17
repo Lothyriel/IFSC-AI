@@ -19,7 +19,7 @@ class AStar(Search):
                     adj.parent = self.current
 
     def heuristic_function(self) -> Node:
-        priority_list = [((abs(d.x - adj.x) + abs(d.y - adj.y)), adj) for d in self.destiny for adj in self.border]
-        best_option = min(priority_list, key=lambda k: k[0])[1]
+        priority_list = [((abs(d.x - adj.x) + abs(d.y - adj.y)), adj) for d in self.destiny for adj in self.border]  # gera uma tupla de (distancia, nodo) para todos os
+        best_option = min(priority_list, key=lambda k: k[0])[1]                                                      # possiveis destinos a partir dos nodos na fronteira
         self.border.remove(best_option)
-        return best_option
+        return best_option              #  retorna a opcao com a menor distancia do destino mais proximo no plano cartesiano

@@ -13,7 +13,7 @@ def init_api(helper: GraphHelper) -> None:  # inicia a api localmente
     port = int(os.environ.get("PORT", 5000))
     app = Flask(__name__)
     api = Api(app)
-    api.add_resource(API, '/api', resource_class_kwargs={'graph_helper': helper})
+    api.add_resource(API, '/api/*', resource_class_kwargs={'graph_helper': helper})
     app.run(host='0.0.0.0', port=port)
 
 
