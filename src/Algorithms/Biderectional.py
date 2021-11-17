@@ -1,11 +1,18 @@
+from typing import Type
+
+from networkx import Graph
+
 from src.Domain.Node import Node
 from src.Domain.Search import Search
+from src.Extensions.GraphHelper import get_algorithm
 
 
 class Biderectional(Search):
-    def __init__(self, search_a: Search, search_b: Search):
-        self.searc_a: Search = search_a
-        self.searc_b: Search = search_b
+    def __init__(self, root: Node, destiny: list[Node], graph: Graph, kwargs: dict):
+        super().__init__(root, destiny, graph, kwargs)
+
+        self.search_a: Type[Search] = get_algorithm(self.kwargs["algorithm_a"])
+        self.search_b: Type[Search] = get_algorithm(self.kwargs["algorithm_b"])
         self.border1: list[Node] = self.destiny
 
     def search(self) -> list[Node]:

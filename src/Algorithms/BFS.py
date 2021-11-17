@@ -3,6 +3,9 @@ from src.Domain.Search import Search
 
 
 class BFS(Search):
+    def remove_choice(self) -> Node:
+        return self.border.pop(0)
+
     def search(self) -> list[Node]:
         # marca todos os vértices como não visitados.
         visited = {node: False for node in self.graph.nodes}
@@ -11,7 +14,7 @@ class BFS(Search):
 
         while self.border:
             # retira o último vértice inserido
-            s = self.border.pop(0)
+            s = self.remove_choice()
             self.search_path.append(s)
             # Verificando vertice adjacentes. Se um adjacente não foi visitado, marca como true e adiciona a fila para visitar
             for adj in self.graph.adj[s]:

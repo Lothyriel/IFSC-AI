@@ -1,3 +1,4 @@
+import abc
 from enum import Enum
 from typing import Dict, Tuple
 from networkx import Graph
@@ -5,7 +6,7 @@ from networkx import Graph
 from src.Domain.Node import Node
 
 
-class Search:  # classe base para a implementacao das buscas
+class Search(metaclass=abc.ABC):  # classe base para a implementacao das buscas
     def __init__(self, root: Node, destiny: list[Node], graph: Graph, kwargs: dict):
         self.kwargs: dict = kwargs
 
@@ -17,9 +18,6 @@ class Search:  # classe base para a implementacao das buscas
         self.explored: Dict[Tuple[int, int]: Node] = {(self.root.x, self.root.y): self.root}
         self.current: Node = root
 
-    def search(self) -> list[Node]:
-        pass
-
     def back_tracking(self) -> list[Node]:
         current = self.search_path[-1]
         best_path = []
@@ -29,6 +27,14 @@ class Search:  # classe base para a implementacao das buscas
             current = current.parent
 
         return best_path[::-1]
+
+    @abc.abstractmethod
+    def search(self) -> list[Node]:
+        pass
+
+    @abc.abstractmethod
+    def remove_choice(self) -> Node:
+        pass
 
 
 class Algorithm(Enum):

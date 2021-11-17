@@ -4,6 +4,9 @@ from src.Domain.Search import Search
 
 
 class IDS(Search):
+    def remove_choice(self):
+        return self.border.pop()
+
     def search(self) -> list[Node]:  # busca padrao em grafo
         max_depth: int = self.kwargs["max_depth"]
         for i in range(max_depth):
@@ -12,7 +15,7 @@ class IDS(Search):
             while True:
                 if not self.border:
                     raise EmptyBorder
-                self.current = self.border.pop()  # removendo os nodos da fronteira em forma de stack (LIFO)
+                self.current = self.remove_choice()  # removendo os nodos da fronteira em forma de stack (LIFO)
                 self.explored[(self.current.x, self.current.y)] = self.current
                 self.search_path.append(self.current)
                 if self.current in self.destiny:

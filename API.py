@@ -2,7 +2,7 @@ import os
 from typing import Tuple, Optional
 
 from flask import Flask, make_response
-from flask_cors import cross_origin, CORS
+from flask_cors import CORS
 from flask_restful import Api, reqparse
 
 from src.Domain.Cell import Cell
@@ -33,13 +33,13 @@ def cors_response(data: dict, code: int):
 
 
 def get_kwargs(args: dict) -> dict:
-    aa = args['algorithm_a']
-    ab = args['algorithm_b']
+    aa: Optional[int] = args['algorithm_a']
+    ab: Optional[int] = args['algorithm_b']
 
-    max_depth = args['max_depth']
+    max_depth: Optional[int] = args['max_depth']
 
-    algorithm_a: Optional[Algorithm] = Algorithm(aa) if aa else None
-    algorithm_b: Optional[Algorithm] = Algorithm(ab) if ab else None
+    algorithm_a: Optional[Algorithm] = Algorithm(aa) if type(aa) == int else None
+    algorithm_b: Optional[Algorithm] = Algorithm(ab) if type(ab) == int else None
     return {"algorithm_a": algorithm_a, "algorithm_b": algorithm_b, "max_depth": max_depth}
 
 
