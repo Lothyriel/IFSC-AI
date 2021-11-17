@@ -19,6 +19,11 @@ def init_api(helper: GraphHelper) -> None:  # inicia a api localmente
     CORS(app, resources={r"/api/*": {"origins": "*"}})
     app.run(host='0.0.0.0', port=port)
 
+    @app.after_request
+    def after_request(response):
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+
 
 def init_parser():  # inicia o parser dos headers do POST
     parser = reqparse.RequestParser()
