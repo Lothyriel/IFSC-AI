@@ -3,6 +3,8 @@ import unittest
 from src.Algorithms.AStar import AStar
 from src.Algorithms.BFS import BFS
 from src.Algorithms.DFS import DFS
+from src.Algorithms.IDS import IDS
+from src.Algorithms.Biderectional import Biderectional
 from src.Domain.Cell import Cell
 from src.Extensions.GraphTransformer import GraphTransformer, get_matrix_data
 from tests.TestHelper import TestHelper, is_equal
@@ -68,4 +70,15 @@ class GraphTests(unittest.TestCase):
 
         h = self.helper.get_node
         expected_path = [h(2, 1), h(1, 0), h(0, 0)]
+        self.assertListEqual(path, expected_path)
+
+        def test_a_star_robo_prateleira(self):
+        graph = self.helper.graph
+        root = next(n for n in graph.nodes if n.cell_type is Cell.SHELF)
+        destiny = [n for n in graph.nodes if n.robot_number]
+
+        path = AStar(root, destiny, graph).search()
+
+        h = self.helper.get_node
+        expected_path = [h(0, 0), h(1, 0), h(2, 1)]
         self.assertListEqual(path, expected_path)
