@@ -2,26 +2,28 @@ import os
 from typing import Tuple, Optional
 
 from flask import Flask
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from flask_restful import Api, Resource, reqparse
 from networkx import Graph
 
 from src.Domain.Cell import Cell
 from src.Domain.Search import Algorithm
-from src.Extensions.GraphHelper import GraphHelper, get_algorithm
+from src.Extensions.GraphHelper import GraphHelper
 
 
 def init_api(helper: GraphHelper) -> None:  # inicia a api localmente
     port = int(os.environ.get("PORT", 5000))
     app = Flask(__name__)
     api = Api(app)
-    CORS(app)
     api.add_resource(API, '/api', resource_class_kwargs={'graph_helper': helper})
+    CORS(app)
     app.run(host='0.0.0.0', port=port)
 
     @app.after_request
     def after_request(response):
         response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+        response.headers.add('Access-Control-Allow-Methods', 'GET,POST')
         return response
 
 
@@ -49,6 +51,7 @@ class API(Resource):  # classe da restul API
         self.graph: Graph = graph_helper.graph
         self.parser = init_parser()
 
+    @cross_origin()
     def get(self) -> Tuple[dict, int]:  # endpoint GET da api, retorna os dados do grafo
         data = {"nodes": self.graph_helper.serialize_graph(),
                 "x_limit": self.graph_helper.node_matrix.shape[0],
@@ -62,6 +65,7 @@ class API(Resource):  # classe da restul API
 
         return data, 200
 
+    @cross_origin()
     def post(self) -> Tuple[dict, int]:  # retorna caminho das buscas conforme o header da request
         args = self.parser.parse_args()
 

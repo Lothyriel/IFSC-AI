@@ -8,7 +8,7 @@ class AStar(Search):
         while True:
             if not self.border:
                 raise EmptyBorder
-            self.current = self.heuristic_function()
+            self.current = self.remove_choice()
             self.explored[(self.current.x, self.current.y)] = self.current
             self.search_path.append(self.current)
             if self.current in self.destiny:
@@ -18,8 +18,9 @@ class AStar(Search):
                     self.border.append(adj)
                     adj.parent = self.current
 
-    def heuristic_function(self) -> Node:
+    def remove_choice(self) -> Node:
         priority_list = [((abs(d.x - adj.x) + abs(d.y - adj.y)), adj) for d in self.destiny for adj in self.border]  # gera uma tupla de (distancia, nodo) para todos os
         best_option = min(priority_list, key=lambda k: k[0])[1]                                                      # possiveis destinos a partir dos nodos na fronteira
         self.border.remove(best_option)
         return best_option              #  retorna o nodo com a menor distancia do destino mais proximo
+
