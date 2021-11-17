@@ -5,7 +5,7 @@ from src.Extensions.GraphHelper import GraphHelper
 from src.Extensions.GraphTransformer import get_matrix_data, GraphTransformer
 
 if __name__ == '__main__':  # inicializando o grafo com uma matriz guardada no arquivo csv local
-    node_matrix = get_matrix_data(os.path.abspath('../csv/Armazem.csv'))
+    node_matrix = get_matrix_data('../csv/armazem.csv')
     graph = GraphTransformer(node_matrix).create_graph()
     helper = GraphHelper(graph, node_matrix)
     init_api(helper)
