@@ -11,15 +11,24 @@ class Search(metaclass=abc.ABCMeta):  # classe base para a implementacao das bus
         self.destiny: list[Node] = destiny
         self.root: Node = root
         self.graph: Graph = graph
-        self.path: list[Node] = []
+        self.search_path: list[Node] = []
         self.border: list[Node] = [self.root]
-        self.border1:list[Node] = [self.destiny]
         self.explored: Dict[Tuple[int, int]: Node] = {(self.root.x, self.root.y): self.root}
         self.current: Node = root
 
     @abc.abstractmethod
     def search(self) -> list[Node]:
         pass
+
+    def back_tracking(self) -> list[Node]:
+        current = self.search_path[-1]
+        best_path = []
+
+        while current:
+            best_path.append(current)
+            current = current.parent
+
+        return best_path[::-1]
 
 
 class Algorithm(Enum):

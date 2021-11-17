@@ -12,12 +12,13 @@ class BFS(Search):
         while self.border:
             # retira o último vértice inserido
             s = self.border.pop(0)
-            self.path.append(s)
+            self.search_path.append(s)
             # Verificando vertice adjacentes. Se um adjacente não foi visitado, marca como true e adiciona a fila para visitar
             for adj in self.graph.adj[s]:
                 if not visited[adj]:
                     self.border.append(adj)
                     visited[adj] = True
+                    adj.parent = s
                 if s in self.destiny:
-                    return self.path
+                    return self.back_tracking()
 

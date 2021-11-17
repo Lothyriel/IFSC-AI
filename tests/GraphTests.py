@@ -32,7 +32,7 @@ class GraphTests(unittest.TestCase):
         path = DFS(root, destiny, graph).search()
 
         h = self.helper.get_node
-        expected_path = [h(2, 1), h(1, 0), h(0, 0), h(1, 1), h(2, 3), h(2, 2)]
+        expected_path = [h(0, 0), h(1, 0), h(2, 1)]
         self.assertListEqual(path, expected_path)
 
     def test_bfs_robo_prateleira(self):
@@ -44,8 +44,8 @@ class GraphTests(unittest.TestCase):
         path = BFS(root, destiny, graph).search()
 
         h = self.helper.get_node
-        expected_path = [h(1, 1), h(2, 0), h(2, 1), h(1, 0), h(0, 0)]
-        self.assert_(is_equal(expected_path, path))
+        expected_path = [h(0, 0), h(1, 0), h(2, 1)]
+        self.assertListEqual(path, expected_path)
 
     def test_bfs_prateleira_robo(self):  # apenas um teste com um grafo qualquer
         graph = self.helper.graph

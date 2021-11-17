@@ -10,12 +10,13 @@ class AStar(Search):
                 raise EmptyBorder
             self.current = self.heuristic_function()
             self.explored[(self.current.x, self.current.y)] = self.current
-            self.path.append(self.current)
+            self.search_path.append(self.current)
             if self.current in self.destiny:
-                return self.path
+                return self.back_tracking()
             for adj in self.graph.adj[self.current]:
                 if (adj.x, adj.y) not in self.explored and adj not in self.border:
                     self.border.append(adj)
+                    adj.parent = self.current
 
     def heuristic_function(self) -> Node:
         priority_list = [((abs(d.x - adj.x) + abs(d.y - adj.y)), adj) for d in self.destiny for adj in self.border]

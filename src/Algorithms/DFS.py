@@ -8,11 +8,12 @@ class DFS(Search):
         while True:
             if not self.border:
                 raise EmptyBorder
-            current = self.border.pop()  # removendo os nodos da fronteira em forma de stack (LIFO)
-            self.explored[(current.x, current.y)] = current
-            self.path.append(current)
-            if current in self.destiny:
-                return self.path
-            for adj in self.graph.adj[current]:
+            self.current = self.border.pop()  # removendo os nodos da fronteira em forma de stack (LIFO)
+            self.explored[(self.current.x, self.current.y)] = self.current
+            self.search_path.append(self.current)
+            if self.current in self.destiny:
+                return self.back_tracking()
+            for adj in self.graph.adj[self.current]:
                 if (adj.x, adj.y) not in self.explored and adj not in self.border:
                     self.border.append(adj)
+                    adj.parent = self.current

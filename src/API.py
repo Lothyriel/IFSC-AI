@@ -33,6 +33,7 @@ class API(Resource):  # classe da restul API
         data = {"nodes": self.graph_helper.serialize_graph(),
                 "x_limit": self.graph_helper.node_matrix.shape[0],
                 "y_limit": self.graph_helper.node_matrix.shape[1],
+                "robots": [n.serialize() for n in self.graph.nodes if n.robot_number],
                 "search_instructions": {
                     "request_headers": '{shelf_x: int, shelf_y: int, search_algorithm: Enum}',
                     "algorithm_enum_values": {e.value: e.name for e in Algorithm}
@@ -50,7 +51,7 @@ class API(Resource):  # classe da restul API
 
         delivery = self.graph_helper.get_delivery(algorithm, int(x), int(y))
         path = delivery.get_path()
-        data = {'path': [node.serialize() for node in path],
+        data = {'search_path': [node.serialize() for node in path],
                 'robot': delivery.selected_robot.robot_number,
                 'shelf': delivery.shelf.serialize(),
                 'path_length': len(path),
