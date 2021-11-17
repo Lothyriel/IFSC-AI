@@ -72,12 +72,12 @@ class GraphTests(unittest.TestCase):
         expected_path = [h(2, 1), h(1, 0), h(0, 0)]
         self.assertListEqual(path, expected_path)
 
-        def test_a_star_1_prateleira_robo(self):  # apenas um teste com um grafo qualquer
+        def test_a_star_robo_prateleira(self):
         graph = self.helper.graph
         root = next(n for n in graph.nodes if n.cell_type is Cell.SHELF)
         destiny = [n for n in graph.nodes if n.robot_number]
 
-        path = AStar(destiny, root, graph).search()
+        path = AStar(root, destiny, graph).search()
 
         h = self.helper.get_node
         expected_path = [h(0, 0), h(1, 0), h(2, 1)]
