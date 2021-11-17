@@ -6,6 +6,7 @@ from flask_cors import CORS
 from flask_restful import Api, Resource, reqparse
 from networkx import Graph
 
+from src.Domain.Exceptions import InvalidNode
 from src.Domain.Search import Algorithm
 from src.Extensions.GraphHelper import GraphHelper, get_algorithm
 
@@ -53,7 +54,11 @@ class API(Resource):  # classe da restul API
         y: int = args['shelf_y']
         algorithm: Algorithm = Algorithm(args['search_algorithm'])
 
-        delivery = self.graph_helper.get_delivery(algorithm, int(x), int(y))
+        try:
+            delivery = self.graph_helper.get_delivery(algorithm, int(x), int(y))
+        except InvalidNode:
+            return {"InvalidNode": f"{x},{y} are not coordinates of a shelf"}, 400
+
         path = delivery.get_path()
         data = {'search_path': [node.serialize() for node in path],
                 'robot': delivery.selected_robot.robot_number,
