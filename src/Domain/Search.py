@@ -7,7 +7,9 @@ from src.Domain.Node import Node
 
 
 class Search(metaclass=abc.ABCMeta):  # classe base para a implementacao das buscas
-    def __init__(self, root: Node, destiny: list[Node], graph: Graph):
+    def __init__(self, root: Node, destiny: list[Node], graph: Graph, kwargs: dict):
+        self.kwargs: dict = kwargs
+
         self.destiny: list[Node] = destiny
         self.root: Node = root
         self.graph: Graph = graph
