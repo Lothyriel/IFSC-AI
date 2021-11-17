@@ -3,11 +3,9 @@ import unittest
 from src.Algorithms.AStar import AStar
 from src.Algorithms.BFS import BFS
 from src.Algorithms.DFS import DFS
-from src.Algorithms.IDS import IDS
-from src.Algorithms.Biderectional import Biderectional
 from src.Domain.Cell import Cell
 from src.Extensions.GraphTransformer import GraphTransformer, get_matrix_data
-from tests.TestHelper import TestHelper, is_equal
+from tests.TestHelper import TestHelper
 
 
 class GraphTests(unittest.TestCase):
