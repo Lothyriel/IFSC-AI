@@ -14,9 +14,9 @@ from src.Extensions.GraphHelper import GraphHelper
 def init_api(helper: GraphHelper) -> None:  # inicia a api localmente
     port = int(os.environ.get("PORT", 5000))
     app = Flask(__name__)
+    CORS(app)
     api = Api(app)
     api.add_resource(API, '/api', resource_class_kwargs={'graph_helper': helper})
-    CORS(app)
     app.run(host='0.0.0.0', port=port)
 
     @app.after_request
