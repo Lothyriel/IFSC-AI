@@ -31,3 +31,5 @@ class GraphHelper:  # classe para agrupar metodos de extensao do grafo
         search_algorithm = get_algorithm(algorithm)
         return Delivery(delivery_shelf, search_algorithm, self.graph)
 
+    def get_node(self, x: int, y: int):
+        return next(n for n in self.graph.nodes if n.x == x and n.y == y)

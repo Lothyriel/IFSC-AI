@@ -6,6 +6,7 @@ from flask_cors import CORS
 from flask_restful import Api, Resource, reqparse
 from networkx import Graph
 
+from src.Domain.Cell import Cell
 from src.Domain.Exceptions import InvalidNode
 from src.Domain.Search import Algorithm
 from src.Extensions.GraphHelper import GraphHelper, get_algorithm
@@ -30,6 +31,8 @@ def init_parser():  # inicia o parser dos headers do POST
     parser.add_argument('shelf_x', type=int, required=True)
     parser.add_argument('shelf_y', type=int, required=True)
     parser.add_argument('search_algorithm', type=int, required=True)
+    parser.add_argument('algorithm_a', type=int, required=False)
+    parser.add_argument('algorithm_b', type=int, required=False)
     return parser
 
 
@@ -58,17 +61,28 @@ class API(Resource):  # classe da restul API
         x: int = args['shelf_x']
         y: int = args['shelf_y']
         algorithm: Algorithm = Algorithm(args['search_algorithm'])
+        # algorithm_a: Algorithm = Algorithm(args['algorithm_a'])
+        # algorithm_b: Algorithm = Algorithm(args['algorithm_b'])
 
-        try:
-            delivery = self.graph_helper.get_delivery(algorithm, int(x), int(y))
-        except InvalidNode:
-            return {"InvalidNode": f"{x},{y} are not coordinates of a shelf"}, 400
+        ensured = self.ensure_valid_delivery(x, y, algorithm)
+        if not ensured[0]:
+            return {"error_message": ensured[1]}, 400
+
+        delivery = self.graph_helper.get_delivery(algorithm, int(x), int(y))
 
         path = delivery.get_path()
         data = {'search_path': [node.serialize() for node in path],
-                'robot': delivery.selected_robot.robot_number,
+                'robot': delivery.shelf.robot_number,
                 'shelf': delivery.shelf.serialize(),
                 'path_length': len(path),
                 'search_algorithm': algorithm.value
                 }
         return data, 200
+
+    def ensure_valid_delivery(self, x: int, y: int, algorithm: Algorithm) -> Tuple[bool, str]:
+        if next(n for n in self.graph.nodes if n.y == y and n.x == y).cell_type is not Cell.SHELF:  # lança uma excessão se as coordenadas enviadas não forem de uma prateleira
+            return False, f"{x},{y} are not coordinates of a shelf"
+        if algorithm == Algorithm.Biderectional and False:
+            return False, "Cant do a bidirectional search with biderectional search"
+
+        return True, ""

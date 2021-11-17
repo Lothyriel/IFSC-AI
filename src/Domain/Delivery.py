@@ -16,7 +16,6 @@ class Delivery:  # classe que trata cada entrega
         self.graph: Graph = graph
 
         self.selected_robot: Optional[Node] = None
-        self.ensure_is_shelf()
 
     def get_path(self) -> list[Node]:
         best_robot_to_shelf = self.get_best_robot_path()  # procura o caminho do melhor robô até a prateleira
@@ -37,7 +36,3 @@ class Delivery:  # classe que trata cada entrega
         shelf_to_best_robot = self.search_algorithm(self.shelf, self.robots, self.graph).search()  # procura o caminho da prateleira até o melhor robô
         self.selected_robot = shelf_to_best_robot[-1]  # nodo onde está o melhor robô
         return shelf_to_best_robot[::-1]  # inverte o caminho para pegar do melhor robô até a prateleira
-
-    def ensure_is_shelf(self) -> None:  # lança uma excessão se as coordenadas enviadas não forem de uma prateleira
-        if self.shelf.cell_type is not Cell.SHELF:
-            raise InvalidNode("Selected node is not a shelf")
