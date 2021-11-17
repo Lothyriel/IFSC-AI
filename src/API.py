@@ -2,7 +2,7 @@ import os
 from typing import Tuple, Optional
 
 from flask import Flask
-from flask_cors import cross_origin
+from flask_cors import cross_origin, CORS
 from flask_restful import Api, Resource, reqparse
 from networkx import Graph
 
@@ -16,7 +16,13 @@ def init_api(helper: GraphHelper) -> None:  # inicia a api localmente
     app = Flask(__name__)
     api = Api(app)
     api.add_resource(API, '/api', resource_class_kwargs={'graph_helper': helper})
+    CORS(app)
     app.run(host='0.0.0.0', port=port)
+
+    @app.after_request
+    def after_request(response):
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
 
 
 def init_parser():  # inicia o parser dos headers do POST
@@ -44,6 +50,7 @@ class API(Resource):  # classe da restul API
         self.graph: Graph = graph_helper.graph
         self.parser = init_parser()
 
+    @cross_origin()
     def get(self) -> Tuple[dict, int]:  # endpoint GET da api, retorna os dados do grafo
         data = {"nodes": self.graph_helper.serialize_graph(),
                 "x_limit": self.graph_helper.node_matrix.shape[0],
