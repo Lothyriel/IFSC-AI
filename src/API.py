@@ -1,5 +1,5 @@
 import os
-from typing import Tuple
+from typing import Tuple, Optional
 
 from flask import Flask
 from flask_cors import CORS
@@ -61,8 +61,12 @@ class API(Resource):  # classe da restul API
         x: int = args['shelf_x']
         y: int = args['shelf_y']
         algorithm: Algorithm = Algorithm(args['search_algorithm'])
-        # algorithm_a: Algorithm = Algorithm(args['algorithm_a'])
-        # algorithm_b: Algorithm = Algorithm(args['algorithm_b'])
+
+        aa = args['algorithm_a']
+        ab = args['algorithm_b']
+
+        algorithm_a: Optional[Algorithm] = Algorithm(aa) if aa else None
+        algorithm_b: Optional[Algorithm] = Algorithm(ab) if ab else None
 
         ensured = self.ensure_valid_delivery(x, y, algorithm)
         if not ensured[0]:
@@ -80,7 +84,8 @@ class API(Resource):  # classe da restul API
         return data, 200
 
     def ensure_valid_delivery(self, x: int, y: int, algorithm: Algorithm) -> Tuple[bool, str]:
-        if next(n for n in self.graph.nodes if n.y == y and n.x == y).cell_type is not Cell.SHELF:  # lança uma excessão se as coordenadas enviadas não forem de uma prateleira
+        shelf = next(n for n in self.graph.nodes if n.x == x and n.y == y)
+        if shelf.cell_type is not Cell.SHELF:  # lança uma excessão se as coordenadas enviadas não forem de uma prateleira
             return False, f"{x},{y} are not coordinates of a shelf"
         if algorithm == Algorithm.Biderectional and False:
             return False, "Cant do a bidirectional search with biderectional search"
