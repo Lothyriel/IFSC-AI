@@ -5,7 +5,7 @@ from networkx import Graph
 from src.Domain.Node import Node
 
 
-class Search():  # classe base para a implementacao das buscas
+class Search:  # classe base para a implementacao das buscas
     def __init__(self, root: Node, destiny: list[Node], graph: Graph, kwargs: dict):
         self.kwargs: dict = kwargs
 
