@@ -7,7 +7,6 @@ from flask_restful import Api, Resource, reqparse
 from networkx import Graph
 
 from src.Domain.Cell import Cell
-from src.Domain.Exceptions import InvalidNode
 from src.Domain.Search import Algorithm
 from src.Extensions.GraphHelper import GraphHelper, get_algorithm
 
@@ -36,6 +35,14 @@ def init_parser():  # inicia o parser dos headers do POST
     return parser
 
 
+def get_kwargs(args: dict) -> dict:
+    aa = args['algorithm_a']
+    ab = args['algorithm_b']
+    algorithm_a: Optional[Algorithm] = Algorithm(aa) if aa else None
+    algorithm_b: Optional[Algorithm] = Algorithm(ab) if ab else None
+    return {"algorithm_a": algorithm_a, "algorithm_b": algorithm_b}
+
+
 class API(Resource):  # classe da restul API
     def __init__(self, graph_helper: GraphHelper):
         self.graph_helper: GraphHelper = graph_helper
@@ -62,17 +69,13 @@ class API(Resource):  # classe da restul API
         y: int = args['shelf_y']
         algorithm: Algorithm = Algorithm(args['search_algorithm'])
 
-        aa = args['algorithm_a']
-        ab = args['algorithm_b']
+        kwargs = get_kwargs(args)
 
-        algorithm_a: Optional[Algorithm] = Algorithm(aa) if aa else None
-        algorithm_b: Optional[Algorithm] = Algorithm(ab) if ab else None
-
-        ensured = self.ensure_valid_delivery(x, y, algorithm)
+        ensured = self.ensure_valid_delivery(x, y, algorithm, kwargs)
         if not ensured[0]:
             return {"error_message": ensured[1]}, 400
 
-        delivery = self.graph_helper.get_delivery(algorithm, int(x), int(y))
+        delivery = self.graph_helper.get_delivery(algorithm, int(x), int(y), kwargs)
 
         path = delivery.get_path()
         data = {'search_path': [node.serialize() for node in path],
@@ -83,11 +86,11 @@ class API(Resource):  # classe da restul API
                 }
         return data, 200
 
-    def ensure_valid_delivery(self, x: int, y: int, algorithm: Algorithm) -> Tuple[bool, str]:
+    def ensure_valid_delivery(self, x: int, y: int, algorithm: Algorithm, kwargs: dict) -> Tuple[bool, str]:
         shelf = next(n for n in self.graph.nodes if n.x == x and n.y == y)
         if shelf.cell_type is not Cell.SHELF:  # lança uma excessão se as coordenadas enviadas não forem de uma prateleira
             return False, f"{x},{y} are not coordinates of a shelf"
-        if algorithm == Algorithm.Biderectional and False:
+        if algorithm == Algorithm.Biderectional and (kwargs["algorithm_a"] == Algorithm.Biderectional or kwargs["algorithm_b"] == Algorithm.Biderectional):
             return False, "Cant do a bidirectional search with biderectional search"
 
         return True, ""

@@ -2,7 +2,6 @@ from typing import Type, Optional
 from networkx import Graph
 
 from src.Domain.Cell import Cell
-from src.Domain.Exceptions import InvalidNode
 from src.Domain.Node import Node
 from src.Domain.Search import Search
 
