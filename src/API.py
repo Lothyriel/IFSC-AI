@@ -88,9 +88,9 @@ class API(Resource):  # classe da restul API
 
     def ensure_valid_delivery(self, x: int, y: int, algorithm: Algorithm, kwargs: dict) -> Tuple[bool, str]:
         shelf = next(n for n in self.graph.nodes if n.x == x and n.y == y)
-        if shelf.cell_type is not Cell.SHELF:  # lança uma excessão se as coordenadas enviadas não forem de uma prateleira
-            return False, f"{x},{y} are not coordinates of a shelf"
+        if shelf.cell_type is not Cell.SHELF:
+            return False, f"{x},{y} are not coordinates of a shelf"  # lança um bad request se as coordenadas enviadas não forem de uma prateleira
         if algorithm == Algorithm.Biderectional and (kwargs["algorithm_a"] == Algorithm.Biderectional or kwargs["algorithm_b"] == Algorithm.Biderectional):
-            return False, "Cant do a bidirectional search with biderectional search"
+            return False, "Cant do a bidirectional search with biderectional search"  # lança um bad request se for selecionado busca bidirecional com busca direcional
 
         return True, ""
