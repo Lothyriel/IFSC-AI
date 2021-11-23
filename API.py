@@ -1,10 +1,10 @@
-import logging
 import os
 from typing import Tuple, Optional
 
 from flask import Flask, make_response
 from flask_cors import CORS
 from flask_restful import Api, reqparse
+from guppy import hpy
 
 from src.Domain.Cell import Cell
 from src.Domain.Exceptions import IDSMaxDepth
@@ -65,6 +65,8 @@ def get() -> Tuple[dict, int]:  # endpoint GET da api, retorna os dados do grafo
 
 @app.route('/api', methods=['POST'])
 def post():  # retorna caminho das buscas conforme o header da request
+    h = hpy()
+    app.logger.info(h.heap())
     args = parser.parse_args()
 
     x: int = args['shelf_x']
@@ -84,6 +86,7 @@ def post():  # retorna caminho das buscas conforme o header da request
         app.logger.info(f'Iniciando busca {algorithm.name}')
         delivery.get_path()
         app.logger.info(f'Finalizando busca {algorithm.name}')
+        app.logger.info(h.heap())
     except IDSMaxDepth:
         return cors_response({'failed': 'IDS couldnt find a path with this max depth value',
                               'max_depth': kwargs["max_depth"],
