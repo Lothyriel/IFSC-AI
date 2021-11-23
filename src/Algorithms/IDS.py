@@ -1,33 +1,35 @@
-from src.Domain.Exceptions import IDSMaxDepth, EmptyBorder
+from typing import Optional
+from networkx import Graph
+
+from src.Domain.Exceptions import IDSMaxDepth, IDSHitCurrentMaxDepth
 from src.Domain.Node import Node
 from src.Domain.Search import Search
 
 
 class IDS(Search):
+    def __init__(self, root: Node, destiny: list[Node], graph: Graph, kwargs: Optional[dict] = None):
+        super().__init__(root, destiny, graph, kwargs)
+        self.max_depth: int = self.kwargs["max_depth"]
+        self.depth: int = 0
+        self.current_max_depth: int = 0
+
     def remove_choice(self):
         return self.border.pop()
 
-    def search(self) -> list[Node]:  # busca padrao em grafo
-        max_depth: int = self.kwargs["max_depth"]
-        for i in range(max_depth):
+    def do_one_step(self) -> None:
+        try:
+            self.explore_current_node()
+        except IDSHitCurrentMaxDepth:
             self.search_path = []
-            depth = 0
-            while True:
-                if not self.border:
-                    raise EmptyBorder
-                self.current = self.remove_choice()  # removendo os nodos da fronteira em forma de stack (LIFO)
-                self.explored[(self.current.x, self.current.y)] = self.current
-                self.search_path.append(self.current)
-                if self.current in self.destiny:
-                    return self.back_tracking()
+            self.current_max_depth += 1
 
-                for adj in self.graph.adj[self.current]:
-                    if (adj.x, adj.y) not in self.explored and adj not in self.border:
-                        self.border.append(adj)
-                        adj.parent = self.current
+    def explore_current_node(self) -> None:
+        if self.depth > self.max_depth:
+            raise IDSMaxDepth
 
-                depth += 1
-                if depth > i:
-                    break
+        if self.depth > self.current_max_depth:
+            raise IDSHitCurrentMaxDepth
 
-        raise IDSMaxDepth()
+        super().explore_current_node()
+        self.depth += 1
+

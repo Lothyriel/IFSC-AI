@@ -14,9 +14,10 @@ def get_matrix_data(file_location: str) -> ndarray:  # transforma a matriz de fo
     str_matrix = np.genfromtxt(file_location, delimiter=',', dtype=str)
 
     matrix = ndarray(shape=str_matrix.shape, dtype=Node)
-    for cord, cell in np.ndenumerate(str_matrix):
+    for cords, cell in np.ndenumerate(str_matrix):
+        x, y = cords
         cell = transform_in_cell(cell)
-        matrix[cord] = Node(cell, cord[0], cord[1])
+        matrix[cords] = Node(cell, x, y)
     return matrix
 
 
@@ -49,8 +50,7 @@ class GraphTransformer:  # classe para transformar o arquivo csv em grafo
         return self.graph
 
     def find_vertices(self, root: Node, coordinates: Tuple[int, int]) -> None:  #  tenta adicionar um vertice a partir de cada direcao partindo do nodo atual
-        row = coordinates[0]
-        col = coordinates[1]
+        row, col = coordinates
 
         up = (row + 1, col)
         down = (row - 1, col)
@@ -67,6 +67,6 @@ class GraphTransformer:  # classe para transformar o arquivo csv em grafo
                 self.graph.add_edge(root, neighbor)                                                                    # e em nodos iniciais (contendo robos)
 
     def is_out_of_bounds(self, cord: tuple[int, int]) -> bool:  # metodo para garantir que só adicionaremos vertices no grafo que realmente existem dentro da matriz
-        rows = self.node_matrix.shape[0]
-        cols = self.node_matrix.shape[1]
-        return (cord[0] >= rows or cord[0] < 0) or (cord[1] >= cols or cord[1] < 0)
+        x, y = cord
+        rows, cols = self.node_matrix.shape
+        return (x >= rows or x < 0) or (y >= cols or y < 0)

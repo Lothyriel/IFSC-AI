@@ -1,3 +1,4 @@
+import logging
 import os
 from typing import Tuple, Optional
 
@@ -8,7 +9,7 @@ from flask_restful import Api, reqparse
 from src.Domain.Cell import Cell
 from src.Domain.Exceptions import IDSMaxDepth
 from src.Domain.Search import Algorithm
-from src.Extensions.GraphHelper import GraphHelper
+from src.Extensions.GraphHelper import GraphHelper, get_algorithm
 from src.Extensions.GraphTransformer import GraphTransformer, get_matrix_data
 
 app = Flask(__name__)
@@ -45,6 +46,8 @@ def get_kwargs(args: dict) -> dict:
 
 @app.route('/api', methods=['GET'])
 def get() -> Tuple[dict, int]:  # endpoint GET da api, retorna os dados do grafo
+    app.logger.info('Pegando dados do grafo')
+
     data = {"nodes": helper.serialize_graph(),
             "x_limit": helper.node_matrix.shape[0],
             "y_limit": helper.node_matrix.shape[1],
@@ -56,7 +59,7 @@ def get() -> Tuple[dict, int]:  # endpoint GET da api, retorna os dados do grafo
                 'IDS_headers': {'max_depth': 'int'}
             }
             }
-
+    app.logger.info(f'Retornando dados do grafo')
     return data, 200
 
 
@@ -70,22 +73,22 @@ def post():  # retorna caminho das buscas conforme o header da request
 
     kwargs = get_kwargs(args)
 
-    ensured = ensure_valid_delivery(x, y, algorithm, kwargs)
+    ok, message = ensure_valid_delivery(x, y, algorithm, kwargs)
 
-    if not ensured[0]:
-        return {"error_message": ensured[1]}
+    if not ok:
+        return cors_response({"error_message": message}, 400)
 
     delivery = helper.get_delivery(algorithm, x, y, kwargs)
 
     try:
+        app.logger.info(f'Iniciando busca {algorithm.name}')
         delivery.get_path()
+        app.logger.info(f'Finalizando busca {algorithm.name}')
     except IDSMaxDepth:
         return cors_response({'failed': 'IDS couldnt find a path with this max depth value',
                               'max_depth': kwargs["max_depth"],
-                              'search_path': [node.serialize() for node in delivery.path],
                               'robot': delivery.shelf.robot_number,
                               'shelf': delivery.shelf.serialize(),
-                              'path_length': len(delivery.path),
                               'search_algorithm': algorithm.value
                               }, 206)
 
@@ -99,7 +102,7 @@ def post():  # retorna caminho das buscas conforme o header da request
     return cors_response(data, 200)
 
 
-def ensure_valid_delivery(x: int, y: int, algorithm: Algorithm, kwargs: dict) -> Tuple[bool, str]:
+def ensure_valid_delivery(x: int, y: int, algorithm: Algorithm, kwargs: dict) -> Tuple[bool, Optional[str]]:
     shelf = next(n for n in graph.nodes if n.x == x and n.y == y)
     if shelf.cell_type is not Cell.SHELF:
         return False, f"{x},{y} are not coordinates of a shelf"  # lança um bad request se as coordenadas enviadas não forem de uma prateleira
@@ -110,7 +113,11 @@ def ensure_valid_delivery(x: int, y: int, algorithm: Algorithm, kwargs: dict) ->
             return False, "Cant do a bidirectional search with biderectional search"  # lança um bad request se for selecionado busca bidirecional com busca bidirecional
         elif not (kwargs["algorithm_a"] and kwargs["algorithm_b"]):
             return False, "Cant do a bidirectional search without two algorithms"
-    return True, ""
+        else:
+            kwargs["algorithm_a"] = get_algorithm(kwargs["algorithm_a"])
+            kwargs["algorithm_b"] = get_algorithm(kwargs["algorithm_b"])
+
+    return True, None
 
 
 if __name__ == '__main__':  # inicializando o grafo com uma matriz guardada no arquivo csv local
@@ -122,4 +129,4 @@ if __name__ == '__main__':  # inicializando o grafo com uma matriz guardada no a
     graph = GraphTransformer(node_matrix).create_graph()
     helper = GraphHelper(graph, node_matrix)
 
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=port, debug=True)

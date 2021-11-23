@@ -2,43 +2,47 @@ from typing import Type
 
 from networkx import Graph
 
+from src.Domain.Exceptions import DestinyFound
 from src.Domain.Node import Node
 from src.Domain.Search import Search
-from src.Extensions.GraphHelper import get_algorithm
 
 
 class Biderectional(Search):
     def __init__(self, root: Node, destiny: list[Node], graph: Graph, kwargs: dict):
         super().__init__(root, destiny, graph, kwargs)
 
-        self.search_a: Type[Search] = get_algorithm(self.kwargs["algorithm_a"])
-        self.search_b: Type[Search] = get_algorithm(self.kwargs["algorithm_b"])
-        self.border1: list[Node] = self.destiny
+        self.search_a: Type[Search] = self.kwargs["algorithm_a"]
+        self.search_b: Type[Search] = self.kwargs["algorithm_b"]
+
+        self.count = 0
 
     def search(self) -> list[Node]:
-        visited = {node: False for node in self.graph.nodes}
-        visited[self.root] = True
-        visited[self.destiny] = True
-        while self.border:
-            # retira o último vértice inserido
-            s = self.border.pop(0)
-            self.search_path.append(s)
+        alg_a = self.search_a(self.root, self.destiny, self.graph, self.kwargs)
 
-            # Verificando vertice adjacentes. Se um adjacente não foi visitado, marca como true e adiciona a fila para visitar
-            for adj in self.graph.adj[s]:
-                if not visited[adj]:
-                    self.border.append(adj)
-                    visited[adj] = True
-                if s in self.destiny:
-                    return self.search_path
-            # retira o último vértice inserido
-            dest = self.border1.pop(0)
-            self.search_path.append(dest)
-            for adj in self.graph.adj[dest]:
-                if not visited[adj]:
-                    self.border1.append(adj)
-                    visited[adj] = True
-                if dest in self.search_path:
-                    return self.search_path
+        if len(self.destiny) > 1:
+            destiny = self.get_shorter_path_when_multiple_destinies()
+            alg_b = self.search_b(destiny, [self.root], self.graph, self.kwargs)
+        else:
+            alg_b = self.search_b(self.destiny[0], [self.root], self.graph, self.kwargs)
 
+        while not any(node in alg_a.search_path for node in alg_b.search_path):
+            if self.count % 2 == 0:
+                try:
+                    alg_a.do_one_step()
+                except DestinyFound:
+                    return alg_a.back_tracking()
+            else:
+                try:
+                    alg_b.do_one_step()
+                except DestinyFound:
+                    return alg_b.back_tracking()
+            self.count += 1
 
+        return []
+
+    def get_shorter_path_when_multiple_destinies(self) -> Node:
+        destiny_node, _ = min([(destiny, self.search_b(self.root, [destiny], self.graph, self.kwargs).search()) for destiny in self.destiny], key=lambda tupla: len(tupla[1]))
+        return destiny_node
+
+    def remove_choice(self) -> Node:
+        raise Exception("Busca Biderecional não é uma busca por si só e não tem um método de remover próprio")
