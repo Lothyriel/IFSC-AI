@@ -34,8 +34,24 @@ def transform_in_cell(cell: str) -> Cell:  # transforma a representacao de strin
     return Cell.HALL
 
 
-def is_not_wall(node: Node) -> bool:
-    return node.cell_type is not Cell.WALL
+def is_wall(node: Node) -> bool:
+    return node.cell_type is Cell.WALL
+
+
+def have_robot(node: Node) -> bool:
+    return node.robot_number
+
+
+def valid_shelf_vertice(neighbor: Node, root: Node):
+    return not shelf_with_shelf_connection(neighbor, root) and is_sideways_connection(neighbor, root)
+
+
+def shelf_with_shelf_connection(neighbor: Node, root: Node):
+    return root.cell_type is Cell.SHELF and neighbor.cell_type is Cell.SHELF
+
+
+def is_sideways_connection(neighbor: Node, root: Node):
+    return root.x == neighbor.x
 
 
 class GraphTransformer:  # classe para transformar o arquivo csv em grafo
@@ -45,7 +61,7 @@ class GraphTransformer:  # classe para transformar o arquivo csv em grafo
 
     def create_graph(self) -> Graph:  #  transforma a matriz de Cell em um grafo nao direcional
         for cord, node in np.ndenumerate(self.node_matrix):
-            if is_not_wall(node):
+            if not is_wall(node):
                 self.find_vertices(node, cord)
         return self.graph
 
@@ -62,9 +78,8 @@ class GraphTransformer:  # classe para transformar o arquivo csv em grafo
                 self.add_vertice(root, self.node_matrix[cord])
 
     def add_vertice(self, root: Node, neighbor: Node) -> None:
-        if is_not_wall(neighbor):  # nao adiciona paredes nas conexoes dos grafos
-            if not (root.cell_type == Cell.SHELF and neighbor.cell_type == Cell.SHELF) and not neighbor.robot_number:  # nao adiciona caminhos de estantes para outras estantes
-                self.graph.add_edge(root, neighbor)                                                                    # e em nodos iniciais (contendo robos)
+        if not is_wall(neighbor) and valid_shelf_vertice(neighbor, root) and not have_robot(neighbor):  # nao adiciona paredes nas conexoes dos grafos
+            self.graph.add_edge(root, neighbor)    # nao adiciona caminhos de estantes para outras estantes     # e para outros nodos iniciais (contendo robos)
 
     def is_out_of_bounds(self, cord: tuple[int, int]) -> bool:  # metodo para garantir que só adicionaremos vertices no grafo que realmente existem dentro da matriz
         x, y = cord
