@@ -72,10 +72,10 @@ def post():  # retorna caminho das buscas conforme o header da request
 
     delivery = helper.get_delivery(algorithm, x, y, kwargs)
 
-    app.logger.info(f'Iniciando busca {algorithm.name} da prateleira x:{x}, y:{y}')
+    app.logger.info(f'Iniciando busca {algorithm.name} da prateleira X:{x}, Y:{y}')
     delivery.get_path()
     app.logger.info(f'Memória utilizada: {h.heap().size / 1000000} MB')
-    app.logger.info(f'Busca Finalizada: {algorithm.name} | da prateleira x:{x}, y:{y}')
+    app.logger.info(f'Busca Finalizada: {algorithm.name} | da prateleira X:{x}, Y:{y}')
 
     data = {'search_path': [node.serialize() for node in delivery.path],
             'robot': delivery.shelf.robot_number,
@@ -88,9 +88,13 @@ def post():  # retorna caminho das buscas conforme o header da request
 
 
 def ensure_valid_delivery(x: int, y: int, algorithm: Algorithm, kwargs: dict) -> Tuple[bool, Optional[str]]:
-    shelf = helper.get_node(x, y)
+    try:
+        shelf = helper.get_node(x, y)
+    except StopIteration:
+        return False, f"X:{x} | Y:{y} are not valid coordinantes of them matrix"  # lança um bad request se as coordenadas enviadas não estiverem dentro da matriz do armazem
+
     if shelf.cell_type is not Cell.SHELF:
-        return False, f"{x},{y} are not coordinates of a shelf"  # lança um bad request se as coordenadas enviadas não forem de uma prateleira
+        return False, f"X:{x} | Y:{y} are not coordinates of a shelf"  # lança um bad request se as coordenadas enviadas não forem de uma prateleira
     if algorithm == Algorithm.Biderectional:
         if kwargs["algorithm_a"] == Algorithm.Biderectional or kwargs["algorithm_b"] == Algorithm.Biderectional:
             return False, "Cant do a bidirectional search with biderectional search"  # lança um bad request se for selecionado busca bidirecional com busca bidirecional
