@@ -25,6 +25,8 @@ class Search(metaclass=abc.ABCMeta):  # classe base para a implementacao das bus
                 self.do_one_step()
         except DestinyFound:
             return self.back_tracking()  # retorna o caminho final fazendo o backtracking
+        finally:
+            self.clear_nodes_parent()
 
     def back_tracking(self) -> list[Node]:  # pega o ultimo nodo do caminho e percorre a lista do caminho de forma contrária atraves do nodo parente
         current = self.search_path[-1]      # até chegar no nodo inicial
@@ -54,6 +56,10 @@ class Search(metaclass=abc.ABCMeta):  # classe base para a implementacao das bus
             if (adj.x, adj.y) not in self.explored and adj not in self.border:
                 self.border.append(adj)
                 adj.parent = self.current
+
+    def clear_nodes_parent(self):
+        for node in self.graph.nodes:
+            node.parent = None
 
     @abc.abstractmethod
     def remove_choice(self) -> Node:
