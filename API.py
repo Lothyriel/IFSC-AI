@@ -85,8 +85,8 @@ def post():  # retorna caminho das buscas conforme o header da request
     try:
         app.logger.info(f'Iniciando busca {algorithm.name}')
         delivery.get_path()
-        app.logger.info(f'Finalizando busca {algorithm.name}')
         app.logger.info(h.heap())
+        app.logger.info(f'Busca Finalizada: {algorithm.name}')
     except IDSMaxDepth:
         return cors_response({'failed': 'IDS couldnt find a path with this max depth value',
                               'max_depth': kwargs["max_depth"],
