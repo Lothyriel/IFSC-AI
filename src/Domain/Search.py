@@ -38,7 +38,6 @@ class Search(metaclass=abc.ABCMeta):  # classe base para a implementacao das bus
 
     def do_one_step(self) -> None:
         self.explore_current_node()
-        self.explore_border()  # adiciona os nodos na fronteira do nodo escolhido para serem explorado
 
     def explore_current_node(self) -> None:
         if not self.border:
@@ -48,7 +47,7 @@ class Search(metaclass=abc.ABCMeta):  # classe base para a implementacao das bus
         self.search_path.append(self.current)  # adicionando no caminho da busca
         if self.current in self.destiny:  # se for o destino
             raise DestinyFound  # lanca excessao de que o destino foi encontrado para ser tratada acima na stack
-        self.explore_border()
+        self.explore_border()  # adiciona os nodos na fronteira do nodo escolhido para serem explorado
 
     def explore_border(self) -> None:
         for adj in self.graph.adj[self.current]:

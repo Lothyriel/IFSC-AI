@@ -31,5 +31,6 @@ class IDS(Search):
             raise IDSHitCurrentMaxDepth
 
         super().explore_current_node()
+        self.explore_border()
         self.depth += 1
 
