@@ -66,7 +66,7 @@ def get() -> Tuple[dict, int]:  # endpoint GET da api, retorna os dados do grafo
 @app.route('/api', methods=['POST'])
 def post():  # retorna caminho das buscas conforme o header da request
     h = hpy()
-    app.logger.info(h.heap())
+    app.logger.info(f'Memória utilizada: {h.heap().size / 1000000}')
     args = parser.parse_args()
 
     x: int = args['shelf_x']
@@ -85,7 +85,7 @@ def post():  # retorna caminho das buscas conforme o header da request
     try:
         app.logger.info(f'Iniciando busca {algorithm.name} da prateleira x:{x}, y:{y}')
         delivery.get_path()
-        app.logger.info(h.heap())
+        app.logger.info(f'Memória utilizada: {h.heap().size/1000000}')
         app.logger.info(f'Busca Finalizada: {algorithm.name} | da prateleira x:{x}, y:{y}')
     except IDSMaxDepth:
         return cors_response({'failed': 'IDS couldnt find a path with this max depth value',
