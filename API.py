@@ -13,6 +13,7 @@ from src.Extensions.GraphHelper import GraphHelper, get_algorithm
 from src.Extensions.GraphTransformer import GraphTransformer, get_matrix_data
 
 app = Flask(__name__)
+app.config['CORS_HEADERS'] = 'Content-Type'
 cors = CORS(app)
 
 
