@@ -1,7 +1,7 @@
 import os
 from typing import Tuple, Optional
 
-from flask import Flask, make_response
+from flask import Flask
 from flask_cors import CORS
 from flask_restful import Api, reqparse
 from guppy import hpy
@@ -13,7 +13,7 @@ from src.Extensions.GraphHelper import GraphHelper, get_algorithm
 from src.Extensions.GraphTransformer import GraphTransformer, get_matrix_data
 
 app = Flask(__name__)
-CORS(app)
+cors = CORS(app)
 
 
 def init_parser():  # inicia o new_parser dos headers do POST
@@ -25,12 +25,6 @@ def init_parser():  # inicia o new_parser dos headers do POST
     new_parser.add_argument('algorithm_a', type=int, required=False)
     new_parser.add_argument('algorithm_b', type=int, required=False)
     return new_parser
-
-
-def cors_response(data: dict, code: int):
-    response = make_response(data, code)
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    return response
 
 
 def get_kwargs(args: dict) -> dict:
@@ -66,7 +60,7 @@ def get() -> Tuple[dict, int]:  # endpoint GET da api, retorna os dados do grafo
 @app.route('/api', methods=['POST'])
 def post():  # retorna caminho das buscas conforme o header da request
     h = hpy()
-    app.logger.info(f'Memória utilizada: {h.heap().size / 1000000}')
+    app.logger.info(f'Memória utilizada: {h.heap().size / 1000000} MB')
     args = parser.parse_args()
 
     x: int = args['shelf_x']
@@ -78,22 +72,22 @@ def post():  # retorna caminho das buscas conforme o header da request
     ok, message = ensure_valid_delivery(x, y, algorithm, kwargs)
 
     if not ok:
-        return cors_response({"error_message": message}, 400)
+        return {"error_message": message}, 400
 
     delivery = helper.get_delivery(algorithm, x, y, kwargs)
 
     try:
         app.logger.info(f'Iniciando busca {algorithm.name} da prateleira x:{x}, y:{y}')
         delivery.get_path()
-        app.logger.info(f'Memória utilizada: {h.heap().size/1000000}')
+        app.logger.info(f'Memória utilizada: {h.heap().size/1000000} MB')
         app.logger.info(f'Busca Finalizada: {algorithm.name} | da prateleira x:{x}, y:{y}')
     except IDSMaxDepth:
-        return cors_response({'failed': 'IDS couldnt find a path with this max depth value',
+        return {'failed': 'IDS couldnt find a path with this max depth value',
                               'max_depth': kwargs["max_depth"],
                               'robot': delivery.shelf.robot_number,
                               'shelf': delivery.shelf.serialize(),
                               'search_algorithm': algorithm.value
-                              }, 206)
+                              }, 206
 
     data = {'search_path': [node.serialize() for node in delivery.path],
             'robot': delivery.shelf.robot_number,
@@ -102,7 +96,7 @@ def post():  # retorna caminho das buscas conforme o header da request
             'search_algorithm': algorithm.value
             }
 
-    return cors_response(data, 200)
+    return data, 200
 
 
 def ensure_valid_delivery(x: int, y: int, algorithm: Algorithm, kwargs: dict) -> Tuple[bool, Optional[str]]:
