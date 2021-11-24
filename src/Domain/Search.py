@@ -28,8 +28,11 @@ class Search(metaclass=abc.ABCMeta):  # classe base para a implementacao das bus
         finally:
             self.clear_nodes_parent()
 
-    def back_tracking(self) -> list[Node]:  # pega o ultimo nodo do caminho e percorre a lista do caminho de forma contrária atraves do nodo parente
-        current = self.search_path[-1]      # até chegar no nodo inicial
+    def back_tracking(self, initial: Node = None) -> list[Node]:  # pega o ultimo nodo do caminho e percorre a lista do caminho de forma contrária atraves do nodo parente
+        if not initial:
+            initial = self.search_path[-1]
+
+        current = initial           # até chegar ao ultimo nodo percorrido
         best_path = []
 
         while current:
