@@ -8,11 +8,11 @@ from src.Domain.Search import Search
 
 class Delivery:  # classe que trata cada entrega
     def __init__(self, shelf: Node, search: Type[Search], graph: Graph, kwargs: dict):
-        self.robots: list[Node] = [n for n in graph.nodes if n.robot_number]
+        self.graph: Graph = graph
+        self.robots: list[Node] = [n for n in self.graph.nodes if n.robot_number]
         self.search_algorithm: Type[Search] = search
         self.shelf: Node = shelf
-        self.delivery_pos: Node = next(n for n in graph.nodes if n.cell_type is Cell.DELIVER_POS)
-        self.graph: Graph = graph
+        self.delivery_pos: Node = next(n for n in self.graph.nodes if n.cell_type is Cell.DELIVER_POS)
         self.kwargs: dict = kwargs
         self.path: list[Node] = []
 
@@ -37,5 +37,9 @@ class Delivery:  # classe que trata cada entrega
 
     def get_best_robot_path(self) -> list[Node]:
         shelf_to_best_robot = self.search_algorithm(self.shelf, self.robots, self.graph, self.kwargs).search()  # procura o caminho da prateleira até o melhor robô
-        self.selected_robot = shelf_to_best_robot[-1]  # nodo onde está o melhor robô
+        robot_node = shelf_to_best_robot[-1]
+        self.selected_robot = self.get_node(robot_node.x, robot_node.y)  # nodo onde está o melhor robô, preciso pegar pelas coordenadas por causa da deepcopy que foi feita do grafo para a classe Bidirecional
         return shelf_to_best_robot[::-1]  # inverte o caminho para pegar do melhor robô até a prateleira
+
+    def get_node(self, x: int, y: int):
+        return next(n for n in self.graph.nodes if n.x == x and n.y == y)

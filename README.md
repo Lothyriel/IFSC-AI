@@ -3,9 +3,8 @@
 route -> /api
 
 Post JSON Body Params:
-required -> {"shelf_x": 1, "shelf_y": 0, "search_algorithm": 2}
-IDS -> {"max_depth": 10} 
-Bidirectional -> {"algorithm_a": 0, "algorithm_b": 0}
+Required -> {"shelf_x": int, "shelf_y": int, "search_algorithm": Enum}
+Bidirectional -> {"algorithm_a": Enum, "algorithm_b": Enum}
 
 
 Algorithms Enum

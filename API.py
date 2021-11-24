@@ -7,7 +7,6 @@ from flask_restful import Api, reqparse
 from guppy import hpy
 
 from src.Domain.Cell import Cell
-from src.Domain.Exceptions import IDSMaxDepth
 from src.Domain.Search import Algorithm
 from src.Extensions.GraphHelper import GraphHelper, get_algorithm
 from src.Extensions.GraphTransformer import GraphTransformer, get_matrix_data
@@ -22,7 +21,6 @@ def init_parser():  # inicia o new_parser dos headers do POST
     new_parser.add_argument('shelf_x', type=int, required=True)
     new_parser.add_argument('shelf_y', type=int, required=True)
     new_parser.add_argument('search_algorithm', type=int, required=True)
-    new_parser.add_argument('max_depth', type=int, required=False)
     new_parser.add_argument('algorithm_a', type=int, required=False)
     new_parser.add_argument('algorithm_b', type=int, required=False)
     return new_parser
@@ -32,11 +30,9 @@ def get_kwargs(args: dict) -> dict:
     aa: Optional[int] = args['algorithm_a']
     ab: Optional[int] = args['algorithm_b']
 
-    max_depth: Optional[int] = args['max_depth']
-
     algorithm_a: Optional[Algorithm] = Algorithm(aa) if type(aa) == int else None
     algorithm_b: Optional[Algorithm] = Algorithm(ab) if type(ab) == int else None
-    return {"algorithm_a": algorithm_a, "algorithm_b": algorithm_b, "max_depth": max_depth}
+    return {"algorithm_a": algorithm_a, "algorithm_b": algorithm_b}
 
 
 @app.route('/api', methods=['GET'])
@@ -50,8 +46,7 @@ def get() -> Tuple[dict, int]:  # endpoint GET da api, retorna os dados do grafo
             "search_instructions": {
                 "algorithm_enum_values": {e.value: e.name for e in Algorithm},
                 "request_headers": {'shelf_x': 'int', 'shelf_y': 'int', 'search_algorithm': 'Enum'},
-                'biderectional_headers': {'algorithm_a': 'Enum', 'algorithm_b': 'Enum'},
-                'IDS_headers': {'max_depth': 'int'}
+                'biderectional_headers': {'algorithm_a': 'Enum', 'algorithm_b': 'Enum'}
             }
             }
     app.logger.info(f'Retornando dados do grafo')
@@ -77,18 +72,10 @@ def post():  # retorna caminho das buscas conforme o header da request
 
     delivery = helper.get_delivery(algorithm, x, y, kwargs)
 
-    try:
-        app.logger.info(f'Iniciando busca {algorithm.name} da prateleira x:{x}, y:{y}')
-        delivery.get_path()
-        app.logger.info(f'Memória utilizada: {h.heap().size/1000000} MB')
-        app.logger.info(f'Busca Finalizada: {algorithm.name} | da prateleira x:{x}, y:{y}')
-    except IDSMaxDepth:
-        return {'failed': 'IDS couldnt find a path with this max depth value',
-                              'max_depth': kwargs["max_depth"],
-                              'robot': delivery.shelf.robot_number,
-                              'shelf': delivery.shelf.serialize(),
-                              'search_algorithm': algorithm.value
-                              }, 206
+    app.logger.info(f'Iniciando busca {algorithm.name} da prateleira x:{x}, y:{y}')
+    delivery.get_path()
+    app.logger.info(f'Memória utilizada: {h.heap().size / 1000000} MB')
+    app.logger.info(f'Busca Finalizada: {algorithm.name} | da prateleira x:{x}, y:{y}')
 
     data = {'search_path': [node.serialize() for node in delivery.path],
             'robot': delivery.shelf.robot_number,
@@ -101,11 +88,9 @@ def post():  # retorna caminho das buscas conforme o header da request
 
 
 def ensure_valid_delivery(x: int, y: int, algorithm: Algorithm, kwargs: dict) -> Tuple[bool, Optional[str]]:
-    shelf = next(n for n in graph.nodes if n.x == x and n.y == y)
+    shelf = helper.get_node(x, y)
     if shelf.cell_type is not Cell.SHELF:
         return False, f"{x},{y} are not coordinates of a shelf"  # lança um bad request se as coordenadas enviadas não forem de uma prateleira
-    if algorithm == Algorithm.IDS and not kwargs["max_depth"]:
-        return False, "Cant do a IDS search without a max depth value"  # lança um bad request se for selecionado busca IDS sem o valor maximo de profundidade
     if algorithm == Algorithm.Biderectional:
         if kwargs["algorithm_a"] == Algorithm.Biderectional or kwargs["algorithm_b"] == Algorithm.Biderectional:
             return False, "Cant do a bidirectional search with biderectional search"  # lança um bad request se for selecionado busca bidirecional com busca bidirecional

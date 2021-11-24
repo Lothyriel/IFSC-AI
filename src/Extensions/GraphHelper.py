@@ -27,7 +27,7 @@ class GraphHelper:  # classe para agrupar metodos de extensao do grafo
         return s_n
 
     def get_delivery(self, algorithm: Algorithm, x: int, y: int, kwargs: dict) -> Delivery:  # retorna a encomenda a partir dos dados enviados pela request do front end
-        delivery_shelf = next(node for node in self.graph.nodes if node.x == x and node.y == y)
+        delivery_shelf = self.get_node(x, y)
         search_algorithm = get_algorithm(algorithm)
         return Delivery(delivery_shelf, search_algorithm, self.graph, kwargs)
 

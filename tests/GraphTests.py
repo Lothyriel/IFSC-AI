@@ -17,7 +17,7 @@ class GraphTests(unittest.TestCase):
         node_matrix = get_matrix_data('../armazem.csv')
         self.helper.graph = GraphTransformer(node_matrix).create_graph()
         root = next(n for n in self.helper.graph.nodes if n.robot_number == 1)
-        destiny = [next(n for n in self.helper.graph.nodes if n.x == 1 and n.y == 3)]
+        destiny = self.helper.get_node(1, 3)
         path = DFS(root, destiny, self.helper.graph).search()
 
         h = self.helper.get_node

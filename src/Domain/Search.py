@@ -7,6 +7,10 @@ from src.Domain.Exceptions import EmptyBorder, AbstractSearch, DestinyFound
 from src.Domain.Node import Node
 
 
+def get_node_from(graph: Graph, x: int, y: int):
+    return next(n for n in graph.nodes if n.x == x and n.y == y)
+
+
 class Search(metaclass=abc.ABCMeta):  # classe base para a implementacao das buscas
     def __init__(self, root: Node, destiny: list[Node], graph: Graph, kwargs: Optional[dict] = None):
         self.kwargs: dict = kwargs
@@ -23,8 +27,8 @@ class Search(metaclass=abc.ABCMeta):  # classe base para a implementacao das bus
         try:
             while True:
                 self.do_one_step()
-        except DestinyFound:
-            return self.back_tracking()  # retorna o caminho final fazendo o backtracking
+        except DestinyFound as d:
+            return d.path
         finally:
             self.clear_nodes_parent()
 
@@ -51,7 +55,7 @@ class Search(metaclass=abc.ABCMeta):  # classe base para a implementacao das bus
         self.explored[(self.current.x, self.current.y)] = self.current  # marcand o nodo escohido como explorado
         self.search_path.append(self.current)  # adicionando no caminho da busca
         if self.current in self.destiny:  # se for o destino
-            raise DestinyFound  # lanca excessao de que o destino foi encontrado para ser tratada acima na stack
+            raise DestinyFound(self.back_tracking())  # lanca excessao de que o destino foi encontrado para ser tratada acima na stack
         self.explore_border()  # adiciona os nodos na fronteira do nodo escolhido para serem explorado
 
     def explore_border(self) -> None:
