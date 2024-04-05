@@ -9,8 +9,7 @@ namespace RuleEngine.Domain.Rules
         public abstract bool IsMet();
         public abstract Result Result { get; }
         public abstract ValueBase Variable { get; }
-
-
+        
         public static (ActionRule?, string) Create(string name, OperatorType type, ValueBase value, string targetValue, Result result) 
         {
             if(value.Type == VariableType.Bool && bool.TryParse(targetValue, out bool boolResult))
