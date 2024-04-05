@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Tests.Domain
 {
-    public class TDD
+    public class EngineTests
     {
         [Test]
         public void ShouldConcludeSimpleRule()
@@ -30,6 +30,7 @@ namespace Tests.Domain
 
             es.Result().Should().Be(result);
         }
+        
         [Test]
         public void ShouldActAndResultSimleConclusion()
         {
@@ -53,6 +54,7 @@ namespace Tests.Domain
 
             es.Result().Should().Be(conclusion);
         }
+        
         [Test]
         public void ShouldDeriveRuleAndResultSimleConclusion()
         {
@@ -101,8 +103,9 @@ namespace Tests.Domain
             es.Variables["TipoMolho"].Value = "picante";
             es.Variables["TemMolho"].Value = true;
 
-            es.Result().Message.Should().Be("Melhor vinho para esta refeição é um Riesling");
+            es.Result().Message.Should().Be("Melhor vinho para esta refeiÃ§Ã£o Ã© um Riesling");
         }
+        
         [Test]
         public void ShouldPickRiesling2()
         {
@@ -110,7 +113,7 @@ namespace Tests.Domain
             es.Variables["PratoPrincipal"].Value = "peixe";
             es.Variables["TemMolho"].Value = false;
 
-            es.Result().Message.Should().Be("Melhor vinho para esta refeição é um Riesling");
+            es.Result().Message.Should().Be("Melhor vinho para esta refeiÃ§Ã£o Ã© um Riesling");
         }
     }
 }
