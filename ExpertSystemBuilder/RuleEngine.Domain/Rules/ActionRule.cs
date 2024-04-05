@@ -52,7 +52,7 @@ namespace RuleEngine.Domain.Rules
 
         public override bool IsMet()
         {
-            return Variable?.EvaluateDefault(Operator, TargetValue) ?? false;
+            return Variable.EvaluateDefault(Operator, TargetValue);
         }
 
         public override string ToString()
