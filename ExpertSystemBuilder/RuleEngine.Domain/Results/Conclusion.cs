@@ -1,17 +1,16 @@
-﻿namespace RuleEngine.Domain.Results
+﻿namespace RuleEngine.Domain.Results;
+
+public class Conclusion : Result
 {
-    public class Conclusion : Result
+    public Conclusion(string message)
     {
-        public Conclusion(string message)
-        {
-            Message = message;
-        }
+        Message = message;
+    }
 
-        public string Message { get; }
+    public string Message { get; }
 
-        public override string ToString()
-        {
-            return Message;
-        }
+    public override string ToString()
+    {
+        return Message;
     }
 }
