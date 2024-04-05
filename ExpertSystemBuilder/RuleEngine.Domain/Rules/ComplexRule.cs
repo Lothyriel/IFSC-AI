@@ -20,10 +20,13 @@ namespace RuleEngine.Domain.Rules
         public bool IsMet()
         {
             var result = Rules[0].Item1.IsMet();
+            
             for (int i = 1; i < Rules.Length; i++)
             {
                 var rule = Rules[i].Item1;
+                
                 var operatorType = Rules[i - 1].Item2;
+                
                 if (operatorType == BoolOperator.And)
                 {
                     result &= rule.IsMet();
@@ -33,6 +36,7 @@ namespace RuleEngine.Domain.Rules
                     result |= rule.IsMet();
                 }
             }
+            
             return result;
         }
         public override string ToString()
