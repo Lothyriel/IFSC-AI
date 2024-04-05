@@ -19,7 +19,7 @@ namespace RuleEngine.Domain
         public EsBuilder(ExpertSystem system)
         {
             System = system;
-            Rules = system.Rules.ToList();
+            Rules = system.Rules;
             Variables = system.Variables.Values.ToList();
         }
 

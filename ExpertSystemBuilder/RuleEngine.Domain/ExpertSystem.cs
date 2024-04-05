@@ -1,5 +1,4 @@
-﻿using RuleEngine.Domain.Exceptions;
-using RuleEngine.Domain.Results;
+﻿using RuleEngine.Domain.Results;
 using RuleEngine.Domain.Rules;
 using RuleEngine.Domain.ValueTypes;
 
@@ -7,34 +6,40 @@ namespace RuleEngine.Domain
 {
     public class ExpertSystem
     {
-        public ExpertSystem(List<ValueBase> variables, List<IRule> rules)
+        public ExpertSystem(IEnumerable<ValueBase> variables, IEnumerable<IRule> rules)
         {
             Variables = variables.ToDictionary(variable => variable.Name, v => v);
-            Rules = rules.ToDictionary(rule => rule, rule => false);
+            Rules = rules.ToList();
         }
+
         public Dictionary<string, ValueBase> Variables { get; }
-        public Dictionary<IRule, bool> Rules { get; }
+        public List<IRule> Rules { get; }
 
         public Conclusion Result()
         {
-            List<IRule> nextRules;
-            while ((nextRules = RulesMet()).Any())
+            while (true)
             {
+                var nextRules = RulesMet();
+
+                if (!nextRules.Any())
+                {
+                    throw new ImpossibleScenario();
+                }
+
                 foreach (var rule in nextRules)
                 {
-                    Rules[rule] = true;
                     if (rule.Result is IActionResult action)
+                    {
                         action.Act();
+                    }
                     else if (rule.Result is Conclusion obj)
+                    {
                         return obj;
+                    }
                 }
             }
-            throw new ImpossibleScenario();
         }
 
-        private List<IRule> RulesMet()
-        {
-            return Rules.Keys.Where(r => r.IsMet()).ToList();
-        }
+        private List<IRule> RulesMet() => Rules.Where(r => r.IsMet()).ToList();
     }
 }
