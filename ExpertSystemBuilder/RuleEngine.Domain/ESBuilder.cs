@@ -1,26 +1,25 @@
-﻿using RuleEngine.Domain;
-using RuleEngine.Domain.Rules;
+﻿using RuleEngine.Domain.Rules;
 using RuleEngine.Domain.ValueTypes;
 
-namespace WindowsForms
+namespace RuleEngine.Domain
 {
-    public class ESBuilder
+    public class EsBuilder
     {
-        public ESBuilder(List<IRule> rules, List<ValueBase> variables)
+        public EsBuilder(List<IRule> rules, List<ValueBase> variables)
         {
             Rules = rules;
             Variables = variables;
         }
-        public ESBuilder()
+        public EsBuilder()
         {
             Rules = new();
             Variables = new();
         }
 
-        public ESBuilder(ExpertSystem system)
+        public EsBuilder(ExpertSystem system)
         {
             System = system;
-            Rules = system.Rules.Keys.ToList();
+            Rules = system.Rules.ToList();
             Variables = system.Variables.Values.ToList();
         }
 

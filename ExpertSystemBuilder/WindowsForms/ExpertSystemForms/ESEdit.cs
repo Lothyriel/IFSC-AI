@@ -1,8 +1,10 @@
-﻿namespace WindowsForms.ExpertSystemForms
+﻿using RuleEngine.Domain;
+
+namespace WindowsForms.ExpertSystemForms
 {
     public partial class ESEdit : Form
     {
-        public ESEdit(ESBuilder eSBuilder)
+        public ESEdit(EsBuilder eSBuilder)
         {
             InitializeComponent();
             ESBuilder = eSBuilder;
@@ -10,7 +12,7 @@
             lb_Variables.DataSource = eSBuilder.Variables;
         }
 
-        public ESBuilder ESBuilder { get; }
+        public EsBuilder ESBuilder { get; }
 
         private void bt_AddRule_Click(object sender, EventArgs e)
         {

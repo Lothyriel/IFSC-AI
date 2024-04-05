@@ -26,7 +26,7 @@ namespace WindowsForms
             int index = lb_ExpertSystems.IndexFromPoint(e.Location);
             if (index != ListBox.NoMatches)
             {
-                MainScreen.Instance!.OpenFormPanel(new ESEdit(new ESBuilder((ExpertSystem)lb_ExpertSystems.SelectedItem)));
+                MainScreen.Instance!.OpenFormPanel(new ESEdit(new EsBuilder((ExpertSystem)lb_ExpertSystems.SelectedItem)));
             }
         }
 
@@ -40,7 +40,7 @@ namespace WindowsForms
 
         private void bt_CreateSystem_Click(object sender, EventArgs e)
         {
-            MainScreen.Instance!.OpenFormPanel(new ESEdit(new ESBuilder()));
+            MainScreen.Instance!.OpenFormPanel(new ESEdit(new EsBuilder()));
         }
 
         #endregion

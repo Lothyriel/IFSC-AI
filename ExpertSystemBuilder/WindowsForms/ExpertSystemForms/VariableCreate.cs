@@ -1,12 +1,13 @@
-﻿using RuleEngine.Domain.ValueTypes;
+﻿using RuleEngine.Domain;
+using RuleEngine.Domain.ValueTypes;
 
 namespace WindowsForms.ExpertSystemForms
 {
     public partial class VariableCreate : Form
     {
-        private ESBuilder ESBuilder { get; }
+        private EsBuilder ESBuilder { get; }
 
-        public VariableCreate(ESBuilder eSBuilder)
+        public VariableCreate(EsBuilder eSBuilder)
         {
             InitializeComponent();
             cb_Type.Items.Add(VariableType.Numeric);

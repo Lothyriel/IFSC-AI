@@ -1,6 +1,4 @@
-﻿using RuleEngine.Domain.Exceptions;
-
-namespace RuleEngine.Domain.ValueTypes
+﻿namespace RuleEngine.Domain.ValueTypes
 {
     public abstract class ValueBase
     {

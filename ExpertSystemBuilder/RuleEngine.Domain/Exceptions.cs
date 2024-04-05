@@ -1,7 +1,7 @@
-﻿using RuleEngine.Domain.ValueTypes;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
+using RuleEngine.Domain.ValueTypes;
 
-namespace RuleEngine.Domain.Exceptions
+namespace RuleEngine.Domain
 {
     [Serializable]
     internal class InvalidEnumType : Exception

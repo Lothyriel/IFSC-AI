@@ -1,4 +1,5 @@
-﻿using RuleEngine.Domain.Results;
+﻿using RuleEngine.Domain;
+using RuleEngine.Domain.Results;
 using RuleEngine.Domain.Rules;
 using RuleEngine.Domain.ValueTypes;
 
@@ -6,7 +7,7 @@ namespace WindowsForms.ExpertSystemForms
 {
     public partial class RuleCreate : Form
     {
-        public RuleCreate(ESBuilder eSBuilder)
+        public RuleCreate(EsBuilder eSBuilder)
         {
             InitializeComponent();
             ESBuilder = eSBuilder;
@@ -32,7 +33,7 @@ namespace WindowsForms.ExpertSystemForms
             cb_OperationTypes.Items.Add(OperatorType.GreaterOrEquals);
         }
 
-        public ESBuilder ESBuilder { get; }
+        public EsBuilder ESBuilder { get; }
 
         private void bt_Create_Click(object sender, EventArgs e)
         {
