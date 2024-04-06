@@ -9,11 +9,11 @@ public static class ExamplesEs
     public static ExpertSystem BestWinePicker()
     {
         //criando variaveis
-        var pratoPrincipal = new ObjectiveValue("PratoPrincipal", null, new() { "carneVermelha", "frango", "peixe", "massa" });
-        var tipoMolho = new ObjectiveValue("TipoMolho", null, new() { "picante", "tomate" });
+        var pratoPrincipal = new ObjectiveValue("PratoPrincipal", null, ["carneVermelha", "frango", "peixe", "massa"]);
+        var tipoMolho = new ObjectiveValue("TipoMolho", null, ["picante", "tomate"]);
         var temMolho = new BoolValue("TemMolho", null);
-        var melhorCor = new ObjectiveValue("MelhorCor", null, new() { "tinto", "branco" }, false);
-        var melhorTipo = new ObjectiveValue("MelhorTipo", null, new() { "suave", "seco" }, false);
+        var melhorCor = new ObjectiveValue("MelhorCor", null, ["tinto", "branco"], false);
+        var melhorTipo = new ObjectiveValue("MelhorTipo", null, ["suave", "seco"], false);
 
         //SE prato == carne vermelha ENTAO cor = tinto
         var resultTinto = new ActionResult<string?>(melhorCor, "tinto");
