@@ -13,10 +13,10 @@ public class Result
 
     public static Result Create(ValueBase variable, string newValue)
     {
-        if (variable.Type == VariableType.Bool && bool.TryParse(newValue, out bool boolValue))
+        if (variable.Type == VariableType.Bool && bool.TryParse(newValue, out var boolValue))
             return new ActionResult<bool?>((BoolValue)variable, boolValue);
 
-        if (variable.Type == VariableType.Numeric && double.TryParse(newValue, out double doubleValue))
+        if (variable.Type == VariableType.Numeric && double.TryParse(newValue, out var doubleValue))
             return new ActionResult<double?>((NumericValue)variable, doubleValue);
 
         if (variable.Type == VariableType.Objective && variable is ObjectiveValue objValue && objValue.PossibleValues.TryGetValue(newValue, out _))

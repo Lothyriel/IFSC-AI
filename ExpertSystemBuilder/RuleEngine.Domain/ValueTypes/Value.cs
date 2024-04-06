@@ -3,10 +3,10 @@
     public abstract class ValueBase
     {
         public abstract string Name { get; }
-        public object Value { get => GetValue(); set => SetValue(value); }
+        public object? Value { get => GetValue(); set => SetValue(value); }
         public abstract bool UserInputable { get; }
-        protected abstract object GetValue();
-        protected abstract void SetValue(object value);
+        protected abstract object? GetValue();
+        protected abstract void SetValue(object? value);
 
         public abstract VariableType Type { get; }
 
@@ -40,14 +40,12 @@
                 _ => EvaluateFurther(operatorTypeValue, value),
             };
         }
-        protected override object GetValue() => CurrentValue!;
-        protected override void SetValue(object value) => CurrentValue = (T)value;
+        protected override object? GetValue() => CurrentValue;
+        protected override void SetValue(object? value) => CurrentValue = (T)value!;
 
-        public override string ToString()
-        {
-            return $"{Type}: {Name}: {(CurrentValue is null ? "null" : CurrentValue)}";
-        }
+        public override string ToString() => $"{Type}: {Name}: {(CurrentValue is null ? "null" : CurrentValue)}";
     }
+    
     public enum BoolOperator
     {
         Or,
