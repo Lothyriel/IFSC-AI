@@ -51,8 +51,8 @@ public class Builder
 
         return type switch
         {
-            VariableType.Bool => BoolValue.Valid(name, value, userInputable),
-            VariableType.Objective => ObjectiveValue.Valid(name, value, userInputable, objectiveValues),
+            VariableType.Bool => ValidateBool(name, value, userInputable),
+            VariableType.Objective => ValidateObjective(name, value, userInputable, objectiveValues),
             VariableType.Numeric => ValidateNumber(name, value, userInputable),
             _ => throw new InvalidEnumType(type),
         };
@@ -60,14 +60,14 @@ public class Builder
     
     public static Result CreateResult(Value variable, string newValue)
     {
-        if (variable.Type == VariableType.Bool && bool.TryParse(newValue, out var boolValue))
-            return new ActionResult<bool?>((BoolValue)variable, boolValue);
+        if (variable is BoolValue b && bool.TryParse(newValue, out var boolValue))
+            return new ActionResult<bool?>(b, boolValue);
 
-        if (variable.Type == VariableType.Numeric && double.TryParse(newValue, out var doubleValue))
-            return new ActionResult<double?>((NumericValue)variable, doubleValue);
+        if (variable is NumericValue n && double.TryParse(newValue, out var doubleValue))
+            return new ActionResult<double?>(n, doubleValue);
 
-        if (variable.Type == VariableType.Objective && variable is ObjectiveValue objValue && objValue.PossibleValues.TryGetValue(newValue, out _))
-            return new ActionResult<string>(objValue, newValue);
+        if (variable is ObjectiveValue o && o.PossibleValues.TryGetValue(newValue, out _))
+            return new ActionResult<string>(o, newValue);
 
         return new Conclusion(newValue);
     }
@@ -82,6 +82,33 @@ public class Builder
 
         double? currentValue = isNumber ? doubleValue : null;
         return (new NumericValue(name, currentValue, userInputable), "OK");
+    }
+    
+    private static (ObjectiveValue?, string) ValidateObjective(string name, string value, bool userInputable, HashSet<string> possibleValues)
+    {
+        if (possibleValues.Count < 2)
+        {
+            return (null, "Too few possible values");
+        }
+
+        if (value != "" & !possibleValues.TryGetValue(value, out var currentValue))
+        {
+            return (null, "Value is not in possible values list");
+        }
+
+        return (new ObjectiveValue(name, currentValue, possibleValues, userInputable), "OK");
+    }
+    
+    private static (BoolValue?, string) ValidateBool(string name, string value, bool userInputable)
+    {
+        var isBool = bool.TryParse(value, out var boolValue);
+        if (value != "" && !isBool)
+        {
+            return (null, "Value is not 'true' or 'false'");
+        }
+
+        bool? currentValue = isBool ? boolValue : null;
+        return (new BoolValue(name, currentValue, userInputable), "OK");
     }
 }
 

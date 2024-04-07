@@ -33,19 +33,4 @@ public class ObjectiveValue : Value<string?>
     {
         throw new InvalidOperator(operatorTypeValue, typeof(ObjectiveValue));
     }
-
-    public static (ObjectiveValue?, string) Valid(string name, string value, bool userInputable, HashSet<string> possibleValues)
-    {
-        if (possibleValues.Count < 2)
-        {
-            return (null, "Too few possible values");
-        }
-
-        if (value != "" & !possibleValues.TryGetValue(value, out var currentValue))
-        {
-            return (null, "Value is not in possible values list");
-        }
-
-        return (new ObjectiveValue(name, currentValue, possibleValues, userInputable), "OK");
-    }
 }
