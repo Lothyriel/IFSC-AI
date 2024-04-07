@@ -7,12 +7,12 @@ namespace WindowsForms.ExpertSystemForms
 {
     public partial class RuleCreate : Form
     {
-        public RuleCreate(EsBuilder eSBuilder)
+        public RuleCreate(Builder sBuilder)
         {
             InitializeComponent();
-            ESBuilder = eSBuilder;
+            Builder = sBuilder;
 
-            cb_Variables.DataSource = eSBuilder.Variables;
+            cb_Variables.DataSource = sBuilder.Variables;
 
             bt_Create.Enabled = false;
         }
@@ -33,7 +33,7 @@ namespace WindowsForms.ExpertSystemForms
             cb_OperationTypes.Items.Add(OperatorType.GreaterOrEquals);
         }
 
-        public EsBuilder ESBuilder { get; }
+        public Builder Builder { get; }
 
         private void bt_Create_Click(object sender, EventArgs e)
         {

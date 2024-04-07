@@ -98,7 +98,7 @@ namespace Tests.Domain
         [Test]
         public void ShouldPickRiesling()
         {
-            var es = ExamplesEs.BestWinePicker();
+            var es = Examples.BestWinePicker();
             es.SetVariable("PratoPrincipal", "frango");
             es.SetVariable("TipoMolho", "picante");
             es.SetVariable("TemMolho", true);
@@ -109,7 +109,7 @@ namespace Tests.Domain
         [Test]
         public void ShouldPickRiesling2()
         {
-            var es = ExamplesEs.BestWinePicker();
+            var es = Examples.BestWinePicker();
             es.SetVariable("PratoPrincipal", "peixe");
             es.SetVariable("TemMolho", false);
 

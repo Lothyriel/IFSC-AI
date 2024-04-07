@@ -4,29 +4,29 @@ namespace WindowsForms.ExpertSystemForms
 {
     public partial class EsEdit : Form
     {
-        public EsEdit(EsBuilder eSBuilder)
+        public EsEdit(Builder sBuilder)
         {
             InitializeComponent();
-            ESBuilder = eSBuilder;
-            lb_Rules.DataSource = eSBuilder.Rules;
-            lb_Variables.DataSource = eSBuilder.Variables;
+            Builder = sBuilder;
+            lb_Rules.DataSource = sBuilder.Rules;
+            lb_Variables.DataSource = sBuilder.Variables;
         }
 
-        public EsBuilder ESBuilder { get; }
+        public Builder Builder { get; }
 
         private void bt_AddRule_Click(object sender, EventArgs e)
         {
-            if (!ESBuilder.Variables.Any())
+            if (!Builder.Variables.Any())
             {
                 MessageBox.Show($"You need at least a variable to create a new Rule", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            MainScreen.Instance!.OpenFormPanel(new RuleCreate(ESBuilder));
+            MainScreen.Instance!.OpenFormPanel(new RuleCreate(Builder));
         }
 
         private void bt_AddVariable_Click(object sender, EventArgs e)
         {
-            MainScreen.Instance!.OpenFormPanel(new VariableCreate(ESBuilder));
+            MainScreen.Instance!.OpenFormPanel(new VariableCreate(Builder));
         }
     }
 }

@@ -5,9 +5,9 @@ namespace WindowsForms.ExpertSystemForms
 {
     public partial class VariableCreate : Form
     {
-        private EsBuilder ESBuilder { get; }
+        private Builder Builder { get; }
 
-        public VariableCreate(EsBuilder eSBuilder)
+        public VariableCreate(Builder sBuilder)
         {
             InitializeComponent();
             cb_Type.Items.Add(VariableType.Numeric);
@@ -16,7 +16,7 @@ namespace WindowsForms.ExpertSystemForms
             cb_Type.SelectedIndex = 0;
 
             bt_AddObjectiveValue.Enabled = false;
-            ESBuilder = eSBuilder;
+            Builder = sBuilder;
             ChangeObjectiveValuesVisibility(false);
         }
 
@@ -39,8 +39,8 @@ namespace WindowsForms.ExpertSystemForms
                 Utils.ShowErrorMessage(message);
                 return;
             }
-            ESBuilder.Variables.Add(value);
-            MainScreen.Instance!.OpenFormPanel(new EsEdit(ESBuilder));
+            Builder.Variables.Add(value);
+            MainScreen.Instance!.OpenFormPanel(new EsEdit(Builder));
         }
 
         private HashSet<string> ObjectiveValuesToHashSet()

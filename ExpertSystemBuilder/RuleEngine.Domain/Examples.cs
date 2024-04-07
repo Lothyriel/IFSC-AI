@@ -5,7 +5,7 @@ using RuleEngine.Domain.ValueTypes;
 
 namespace RuleEngine.Domain;
 
-public static class ExamplesEs
+public static class Examples
 {
     public static ExpertSystem BestWinePicker()
     {

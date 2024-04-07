@@ -3,20 +3,20 @@ using RuleEngine.Domain.ValueTypes;
 
 namespace RuleEngine.Domain
 {
-    public class EsBuilder
+    public class Builder
     {
-        public EsBuilder(List<IRule> rules, List<Value> variables)
+        public Builder(List<IRule> rules, List<Value> variables)
         {
             Rules = rules;
             Variables = variables;
         }
-        public EsBuilder()
+        public Builder()
         {
             Rules = new();
             Variables = new();
         }
 
-        public EsBuilder(ExpertSystem system)
+        public Builder(ExpertSystem system)
         {
             System = system;
             Rules = system.Rules;
