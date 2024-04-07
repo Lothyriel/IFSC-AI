@@ -19,18 +19,13 @@ public class ObjectiveValue : Value<string?>
         PossibleValues = possibleValues;
     }
 
-    public override bool Equals(string? v2)
+    public override bool Evaluate(OperatorType op, string? value)
     {
-        return v2 == CurrentValue;
-    }
-
-    public override bool NotEquals(string? v2)
-    {
-        return !Equals(v2);
-    }
-
-    protected override bool EvaluateFurther(OperatorType operatorTypeValue, string? value)
-    {
-        throw new InvalidOperator(operatorTypeValue, typeof(ObjectiveValue));
+        return op switch
+        {
+            OperatorType.Equals => value == CurrentValue,
+            OperatorType.NotEquals => value != CurrentValue,
+            _ => throw new InvalidOperator(op, typeof(BoolValue)),
+        };
     }
 }

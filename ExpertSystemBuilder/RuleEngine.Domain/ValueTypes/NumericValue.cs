@@ -14,46 +14,18 @@ public class NumericValue : Value<double?>
         CurrentValue = value;
         UserInputable = userInputable;
     }
-
-    public override bool Equals(double? v2)
+    
+    public override bool Evaluate(OperatorType op, double? value)
     {
-        return CurrentValue == v2;
-    }
-
-    public override bool NotEquals(double? v2)
-    {
-        return CurrentValue != v2;
-    }
-
-    public bool Greater(double? v2)
-    {
-        return CurrentValue > v2;
-    }
-
-    public bool Lesser(double? v2)
-    {
-        return CurrentValue < v2;
-    }
-
-    public bool GreaterOrEquals(double? v2)
-    {
-        return CurrentValue >= v2;
-    }
-
-    public bool LesserOrEquals(double? v2)
-    {
-        return CurrentValue <= v2;
-    }
-
-    protected override bool EvaluateFurther(OperatorType operatorTypeValue, double? value)
-    {
-        return operatorTypeValue switch
+        return op switch
         {
-            OperatorType.Lesser => Lesser(value),
-            OperatorType.Greater => Greater(value),
-            OperatorType.LesserOrEquals => LesserOrEquals(value),
-            OperatorType.GreaterOrEquals => GreaterOrEquals(value),
-            _ => throw new Exception($"Invalid enum value exception {operatorTypeValue}"),
+            OperatorType.Equals => CurrentValue == value,
+            OperatorType.NotEquals => CurrentValue != value,
+            OperatorType.Lesser => CurrentValue < value,
+            OperatorType.Greater => CurrentValue > value,
+            OperatorType.LesserOrEquals => CurrentValue <= value,
+            OperatorType.GreaterOrEquals => CurrentValue >= value,
+            _ => throw new Exception($"Invalid enum value exception {op}"),
         };
     }
 }

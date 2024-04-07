@@ -3,10 +3,9 @@
 public class BoolValue : Value<bool?>
 {
     public override string Name { get; }
-    protected sealed override bool? CurrentValue { get; set; }
     public override bool UserInputable { get; }
-
     public override VariableType Type => VariableType.Bool;
+    protected sealed override bool? CurrentValue { get; set; }
 
     public BoolValue(string name, bool? currentValue, bool userInputable = true)
     {
@@ -14,19 +13,14 @@ public class BoolValue : Value<bool?>
         CurrentValue = currentValue;
         UserInputable = userInputable;
     }
-
-    public override bool Equals(bool? v2)
+    
+    public override bool Evaluate(OperatorType op, bool? value)
     {
-        return v2 is not null && CurrentValue == v2;
-    }
-
-    public override bool NotEquals(bool? v2)
-    {
-        return Equals(v2);
-    }
-
-    protected override bool EvaluateFurther(OperatorType operatorTypeValue, bool? value)
-    {
-        throw new InvalidOperator(operatorTypeValue, typeof(BoolValue));
+        return op switch
+        {
+            OperatorType.Equals => CurrentValue == value,
+            OperatorType.NotEquals => CurrentValue != value,
+            _ => throw new InvalidOperator(op, typeof(BoolValue)),
+        };
     }
 }

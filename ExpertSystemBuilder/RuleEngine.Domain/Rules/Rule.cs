@@ -34,7 +34,7 @@ public class Rule<T> : Rule
 
     public override bool IsMet()
     {
-        return Variable.EvaluateDefault(Operator, TargetValue);
+        return Variable.Evaluate(Operator, TargetValue);
     }
 
     public override string ToString()

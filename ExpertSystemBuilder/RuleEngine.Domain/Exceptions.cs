@@ -13,7 +13,7 @@ internal class InvalidEnumType : Exception
 [Serializable]
 internal class InvalidOperator : Exception
 {
-    public InvalidOperator(OperatorType operatorTypeValue, Type type) : base($"Type {type} doesn't support the {operatorTypeValue} operator")
+    public InvalidOperator(OperatorType op, Type type) : base($"Type {type} doesn't support the {op} operator")
     {
     }
 }
