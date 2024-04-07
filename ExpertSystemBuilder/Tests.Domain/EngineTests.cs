@@ -18,7 +18,7 @@ namespace Tests.Domain
 
             var rules = new List<IRule>
             {
-                new ActionRule<double?>("simpleRule", variable, OperatorType.Equals, 50, result)
+                new Rule<double?>("simpleRule", variable, OperatorType.Equals, 50, result)
             };
 
             var variables = new List<Value>
@@ -35,14 +35,14 @@ namespace Tests.Domain
         public void ShouldActAndResultSimleConclusion()
         {
             var variable = new NumericValue("var", 10);
-            var action = new Action<double?>(variable, 50);
+            var action = new ActionResult<double?>(variable, 50);
 
             var conclusion = new Conclusion("it's easy when you big in japan");
 
             var rules = new List<IRule>
             {
-                new ActionRule<double?>("rule1",variable, OperatorType.Lesser, 50, action),
-                new ActionRule<double?>("rule2",variable, OperatorType.Equals, 50, conclusion)
+                new Rule<double?>("rule1",variable, OperatorType.Lesser, 50, action),
+                new Rule<double?>("rule2",variable, OperatorType.Equals, 50, conclusion)
             };
 
             var variables = new List<Value>
@@ -59,14 +59,14 @@ namespace Tests.Domain
         public void ShouldDeriveRuleAndResultSimleConclusion()
         {
             var variable = new NumericValue("var", 10);
-            var action = new Action<double?>(variable, 50);
+            var action = new ActionResult<double?>(variable, 50);
 
             var conclusion = new Conclusion("it's easy when you big in japan");
 
             var rules = new List<IRule>
             {
-                new ActionRule<double?>("rule1",variable, OperatorType.Equals, 50, conclusion),
-                new ActionRule<double?>("rule2",variable, OperatorType.Lesser, 50, action)
+                new Rule<double?>("rule1",variable, OperatorType.Equals, 50, conclusion),
+                new Rule<double?>("rule2",variable, OperatorType.Lesser, 50, action)
             };
 
             var variables = new List<Value>
@@ -87,10 +87,10 @@ namespace Tests.Domain
             var pratoPrincipal = new ObjectiveValue("PratoPrincipal", "frango", ["carneVermelha", "frango", "peixe"]);
             var melhorCor = new ObjectiveValue("MelhorCor", null, ["tinto", "branco"]);
 
-            var resultbranco = new Action<string?>(melhorCor, "branco");
-            var ruleFrango = new ActionRule<string?>("ruleFrango", pratoPrincipal, OperatorType.Equals, "frango", Result.Empty);
-            var rulePeixe = new ActionRule<string?>("rulePeixe", pratoPrincipal, OperatorType.Equals, "peixe", Result.Empty);
-            var regraFrangoOuPeixe = new ComplexRule("ruleFrangoOuPeixe", resultbranco, (ruleFrango, boolOperator), (rulePeixe, null));
+            var resultbranco = new ActionResult<string?>(melhorCor, "branco");
+            var ruleFrango = new Rule<string?>("ruleFrango", pratoPrincipal, OperatorType.Equals, "frango");
+            var rulePeixe = new Rule<string?>("rulePeixe", pratoPrincipal, OperatorType.Equals, "peixe");
+            var regraFrangoOuPeixe = new ComplexRule("ruleFrangoOuPeixe", resultbranco, ruleFrango, boolOperator, rulePeixe);
 
             regraFrangoOuPeixe.IsMet().Should().Be(expectedResul);
         }

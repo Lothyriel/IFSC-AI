@@ -21,7 +21,7 @@ internal class InvalidOperator : Exception
 [Serializable]
 internal class ImpossibleScenario : Exception
 {
-    public ImpossibleScenario() : base("The system couldn't resolve this problem!")
+    public ImpossibleScenario() : base("The system couldn't resolve this problem with the current rules!")
     {
     }
 }

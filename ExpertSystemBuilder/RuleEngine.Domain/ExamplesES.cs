@@ -16,51 +16,51 @@ public static class ExamplesEs
         var melhorTipo = new ObjectiveValue("MelhorTipo", null, ["suave", "seco"], false);
 
         //SE prato == carne vermelha ENTAO cor = tinto
-        var resultTinto = new Results.Action<string?>(melhorCor, "tinto");
-        var ruleCarneVermelha_Tinto = new ActionRule<string?>("ruleCarneVermelha", pratoPrincipal, OperatorType.Equals, "carneVermelha", resultTinto);
+        var resultTinto = new ActionResult<string>(melhorCor, "tinto");
+        var ruleCarneVermelha_Tinto = new Rule<string>("ruleCarneVermelha", pratoPrincipal, OperatorType.Equals, "carneVermelha", resultTinto);
 
         //SE prato == peixe || frango ENTAO cor = branco
-        var resultBranco = new Results.Action<string?>(melhorCor, "branco");
-        var ruleFrango = new ActionRule<string?>("ruleFrango", pratoPrincipal, OperatorType.Equals, "frango", Result.Empty);
-        var rulePeixe = new ActionRule<string?>("rulePeixe", pratoPrincipal, OperatorType.Equals, "peixe", Result.Empty);
-        var ruleFrangoOuPeixe_Branco = new ComplexRule("ruleFrangoOuPeixe", resultBranco, (ruleFrango, BoolOperator.Or), (rulePeixe, null));
+        var resultBranco = new ActionResult<string>(melhorCor, "branco");
+        var ruleFrango = new Rule<string>("ruleFrango", pratoPrincipal, OperatorType.Equals, "frango");
+        var rulePeixe = new Rule<string>("rulePeixe", pratoPrincipal, OperatorType.Equals, "peixe");
+        var ruleFrangoOuPeixe_Branco = new ComplexRule("ruleFrangoOuPeixe", resultBranco, ruleFrango, BoolOperator.Or, rulePeixe);
 
         //SE temMolho == false ENTAO tipo = suave
-        var resultSuave = new Results.Action<string?>(melhorTipo, "suave");
-        var ruleNaoTemMolho_Suave = new ActionRule<bool?>("ruleNaoTemMolho", temMolho, OperatorType.Equals, false, resultSuave);
+        var resultSuave = new ActionResult<string>(melhorTipo, "suave");
+        var ruleNaoTemMolho_Suave = new Rule<bool?>("ruleNaoTemMolho", temMolho, OperatorType.Equals, false, resultSuave);
 
         //SE temMolho == true && tipoMolho == picante ENTAO tipo = suave
-        var ruleTemMolho = new ActionRule<bool?>("ruleTemMolho", temMolho, OperatorType.Equals, true, Result.Empty);
-        var rulePicante = new ActionRule<string?>("rulePicante", tipoMolho, OperatorType.Equals, "picante", Result.Empty);
-        var ruleTemMolhoPicante_Suave = new ComplexRule("ruleTemMolhoPicante", resultSuave, (ruleTemMolho, BoolOperator.And), (rulePicante, null));
+        var ruleTemMolho = new Rule<bool?>("ruleTemMolho", temMolho, OperatorType.Equals, true);
+        var rulePicante = new Rule<string>("rulePicante", tipoMolho, OperatorType.Equals, "picante");
+        var ruleTemMolhoPicante_Suave = new ComplexRule("ruleTemMolhoPicante", resultSuave, ruleTemMolho, BoolOperator.And, rulePicante);
 
         //SE temMolho == true && tipoMolho == tomate ENTAO tipo = seco
-        var resultSeco = new Results.Action<string?>(melhorTipo, "seco");
-        var ruleTomate = new ActionRule<string?>("ruleTomate", tipoMolho, OperatorType.Equals, "tomate", Result.Empty);
-        var ruleTemMolhoTomate_Seco = new ComplexRule("ruleTemMolhoTomate", resultSeco, (ruleTemMolho, BoolOperator.And), (ruleTomate, null));
+        var resultSeco = new ActionResult<string>(melhorTipo, "seco");
+        var ruleTomate = new Rule<string>("ruleTomate", tipoMolho, OperatorType.Equals, "tomate");
+        var ruleTemMolhoTomate_Seco = new ComplexRule("ruleTemMolhoTomate", resultSeco, ruleTemMolho, BoolOperator.And, ruleTomate);
 
         //SE tipo == suave && cor == branco ENTAO conclui que o melhor vinho é um riesling
         var conclusionRiesling = new Conclusion("Melhor vinho para esta refeição é um Riesling");
-        var ruleBranco = new ActionRule<string?>("ruleBranco", melhorCor, OperatorType.Equals, "branco", Result.Empty);
-        var ruleSuave = new ActionRule<string?>("ruleSuave", melhorTipo, OperatorType.Equals, "suave", Result.Empty);
-        var ruleBrancoSuave_Riesling = new ComplexRule("ruleBrancoSuave", conclusionRiesling, (ruleBranco, BoolOperator.And), (ruleSuave, null));
+        var ruleBranco = new Rule<string>("ruleBranco", melhorCor, OperatorType.Equals, "branco");
+        var ruleSuave = new Rule<string>("ruleSuave", melhorTipo, OperatorType.Equals, "suave");
+        var ruleBrancoSuave_Riesling = new ComplexRule("ruleBrancoSuave", conclusionRiesling, ruleBranco, BoolOperator.And, ruleSuave);
 
         //SE tipo == seco && cor == branco ENTAO conclui que o melhor vinho é um sauvignon blanc
         var conclusionSauvignon = new Conclusion("Melhor vinho para esta refeição é um Sauvignon Blanc");
-        var ruleSeco = new ActionRule<string?>("ruleSeco", melhorTipo, OperatorType.Equals, "seco", Result.Empty);
-        var ruleBrancoSeco_Sauvignon = new ComplexRule("ruleBrancoSuave", conclusionSauvignon, (ruleBranco, BoolOperator.And), (ruleSeco, null));
+        var ruleSeco = new Rule<string>("ruleSeco", melhorTipo, OperatorType.Equals, "seco");
+        var ruleBrancoSeco_Sauvignon = new ComplexRule("ruleBrancoSuave", conclusionSauvignon, ruleBranco, BoolOperator.And, ruleSeco);
 
         //SE tipo == suave && cor == tinto ENTAO conclui que o melhor vinho é um pinot noir
         var conclusionPinot = new Conclusion("Melhor vinho para esta refeição é um Pinot Noir");
-        var ruleTinto = new ActionRule<string?>("ruleTinto", melhorCor, OperatorType.Equals, "suave", Result.Empty);
-        var ruleTintoSuave_Pinot = new ComplexRule("ruleBrancoSuave", conclusionPinot, (ruleTinto, BoolOperator.And), (ruleSuave, null));
+        var ruleTinto = new Rule<string>("ruleTinto", melhorCor, OperatorType.Equals, "suave");
+        var ruleTintoSuave_Pinot = new ComplexRule("ruleBrancoSuave", conclusionPinot, ruleTinto, BoolOperator.And, ruleSuave);
 
         //SE tipo == seco && cor == tinto ENTAO conclui que o melhor vinho é um cabbenet sauvignon
         var conclusionCabennet = new Conclusion("Melhor vinho para esta refeição é um Cabbenet Sauvignon");
-        var ruleTintoSeco_Cabbenet = new ComplexRule("ruleBrancoSuave", conclusionCabennet, (ruleTinto, BoolOperator.And), (ruleSeco, null));
+        var ruleTintoSeco_Cabbenet = new ComplexRule("ruleBrancoSuave", conclusionCabennet, ruleTinto, BoolOperator.And, ruleSeco);
 
         //SE pratoPrincipal == massa ENTAO conclui que o melhor vinho é um cabbenet sauvignon
-        var ruleMassa_Cabbenet = new ActionRule<string?>("ruleMassa", pratoPrincipal, OperatorType.Equals, "massa", conclusionCabennet);
+        var ruleMassa_Cabbenet = new Rule<string>("ruleMassa", pratoPrincipal, OperatorType.Equals, "massa", conclusionCabennet);
 
         var rules = new List<IRule>
         {

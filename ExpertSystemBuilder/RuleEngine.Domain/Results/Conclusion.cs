@@ -9,8 +9,5 @@ public class Conclusion : Result
 
     public string Message { get; }
 
-    public override string ToString()
-    {
-        return Message;
-    }
+    public override string ToString() => Message;
 }

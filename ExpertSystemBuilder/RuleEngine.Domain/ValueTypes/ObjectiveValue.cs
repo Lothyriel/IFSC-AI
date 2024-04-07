@@ -8,13 +8,13 @@ public class ObjectiveValue : Value<string?>
     public override VariableType Type => VariableType.Objective;
     public override bool UserInputable { get; }
 
-    public ObjectiveValue(string name, string? actualValue, HashSet<string> possibleValues, bool userInputable = true)
+    public ObjectiveValue(string name, string? initialValue, HashSet<string> possibleValues, bool userInputable = true)
     {
-        if (actualValue is not null && !possibleValues.TryGetValue(actualValue, out _))
-            throw new Exception($"Actual Value {actualValue} must be in PossibleValues");
+        if (initialValue is not null && !possibleValues.TryGetValue(initialValue, out _))
+            throw new Exception($"Actual Value {initialValue} must be in PossibleValues");
 
         Name = name;
-        CurrentValue = actualValue;
+        CurrentValue = initialValue;
         UserInputable = userInputable;
         PossibleValues = possibleValues;
     }

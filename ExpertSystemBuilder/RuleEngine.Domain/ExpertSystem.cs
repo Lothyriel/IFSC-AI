@@ -13,7 +13,7 @@ public class ExpertSystem
     }
     
     public List<IRule> Rules { get; }
-    private Dictionary<string, Value> Variables { get; }
+    public Dictionary<string, Value> Variables { get; }
     
     public void SetVariable(string variableName, object? value)
     {
@@ -34,13 +34,13 @@ public class ExpertSystem
 
             foreach (var rule in nextRules)
             {
-                if (rule.Result is IAction decision)
+                if (rule.Result is IAction action)
                 {
-                    decision.Make();
+                    action.Perform();
                 }
-                else if (rule.Result is Conclusion obj)
+                else if (rule.Result is Conclusion conclusion)
                 {
-                    return obj;
+                    return conclusion;
                 }
             }
         }

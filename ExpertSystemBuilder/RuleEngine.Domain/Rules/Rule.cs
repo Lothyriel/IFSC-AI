@@ -3,47 +3,44 @@ using RuleEngine.Domain.ValueTypes;
 
 namespace RuleEngine.Domain.Rules;
 
-public abstract class ActionRule : IRule
+public abstract class Rule : IRule
 {
     public abstract string Name { get; }
     public abstract bool IsMet();
     public abstract Result Result { get; }
     public abstract Value Variable { get; }
         
-    public static (ActionRule?, string) Create(string name, OperatorType type, Value value, string targetValue, Result result) 
+    public static (Rule?, string) Create(string name, OperatorType type, Value value, string targetValue, Result result) 
     {
         if(value.Type == VariableType.Bool && bool.TryParse(targetValue, out bool boolResult))
-            return (new ActionRule<bool?>(name, (BoolValue)value, type, boolResult, result), "OK");
+            return (new Rule<bool?>(name, (BoolValue)value, type, boolResult, result), "OK");
 
         if (value.Type == VariableType.Numeric && double.TryParse(targetValue, out double doubleResult))
-            return (new ActionRule<double?>(name, (NumericValue)value, type, doubleResult, result), "OK");
+            return (new Rule<double?>(name, (NumericValue)value, type, doubleResult, result), "OK");
 
         if (value.Type == VariableType.Objective && value is ObjectiveValue objValue && objValue.PossibleValues.TryGetValue(targetValue, out _))
-            return (new ActionRule<string?>(name, objValue, type, targetValue, result), "OK");
+            return (new Rule<string?>(name, objValue, type, targetValue, result), "OK");
 
         return (null, "Target value is not valid for this variable type");
     }
-    public static bool operator &(ActionRule a, ActionRule b)
-    {
-        return a.IsMet() && b.IsMet();
-    }
 }
-public class ActionRule<T> : ActionRule
+
+public class Rule<T> : Rule
 {
-    public ActionRule(string name, Value<T> variable, OperatorType operatorType, T targetValue, Result result)
+    public Rule(string name, Value<T?> variable, OperatorType operatorType, T? targetValue, Result? result = null)
     {
         Variable = variable;
         Operator = operatorType;
         TargetValue = targetValue;
-        Result = result;
+        Result = result ?? Result.NoOp;
         Name = name;
     }
 
-    public override Value<T> Variable { get; }
+    public override Value<T?> Variable { get; }
 
     public OperatorType Operator { get; }
 
-    public T TargetValue { get; }
+    public T? TargetValue { get; }
 
     public override Result Result { get; }
 
