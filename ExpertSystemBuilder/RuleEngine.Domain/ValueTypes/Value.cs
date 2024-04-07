@@ -11,7 +11,7 @@ public abstract class Value
 
 public abstract class Value<T> : Value
 {
-    protected abstract T CurrentValue { get; set; }
+    protected abstract T? CurrentValue { get; set; }
     public abstract bool Evaluate(OperatorType op, T value);
     public override object? GetValue() => CurrentValue;
     public override void SetValue(object? value) => CurrentValue = (T)value!;

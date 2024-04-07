@@ -34,10 +34,8 @@
                 OpenFormPanel(lastForm);
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         private void MainScreen_FormClosing(object sender, FormClosingEventArgs e)

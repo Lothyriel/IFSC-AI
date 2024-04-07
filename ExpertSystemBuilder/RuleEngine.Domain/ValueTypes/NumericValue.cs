@@ -5,7 +5,6 @@ public class NumericValue : Value<double?>
     public override string Name { get; }
     protected sealed override double? CurrentValue { get; set; }
     public override VariableType Type => VariableType.Numeric;
-
     public override bool UserInputable { get; }
 
     public NumericValue(string name, double? value, bool userInputable = true)

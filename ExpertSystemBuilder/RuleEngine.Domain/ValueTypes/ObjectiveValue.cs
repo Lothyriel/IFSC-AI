@@ -1,6 +1,6 @@
 ﻿namespace RuleEngine.Domain.ValueTypes;
 
-public class ObjectiveValue : Value<string?>
+public class ObjectiveValue : Value<string>
 {
     public override string Name { get; }
     protected sealed override string? CurrentValue { get; set; }

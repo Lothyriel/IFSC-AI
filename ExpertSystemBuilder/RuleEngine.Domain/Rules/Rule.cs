@@ -22,14 +22,10 @@ public class Rule<T> : Rule
         Name = name;
     }
 
-    public override Value<T?> Variable { get; }
-
     public OperatorType Operator { get; }
-
     public T? TargetValue { get; }
-
+    public override Value<T?> Variable { get; }
     public override Result Result { get; }
-
     public override string Name { get; }
 
     public override bool IsMet()
@@ -37,8 +33,5 @@ public class Rule<T> : Rule
         return Variable.Evaluate(Operator, TargetValue);
     }
 
-    public override string ToString()
-    {
-        return $"{Variable} | {Operator} | {TargetValue} = {Result}";
-    }
+    public override string ToString() => $"{Variable} | {Operator} | {TargetValue} = {Result}";
 }
