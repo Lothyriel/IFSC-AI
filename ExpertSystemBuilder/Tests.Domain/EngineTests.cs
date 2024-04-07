@@ -87,9 +87,9 @@ namespace Tests.Domain
             var pratoPrincipal = new ObjectiveValue("PratoPrincipal", "frango", ["carneVermelha", "frango", "peixe"]);
             var melhorCor = new ObjectiveValue("MelhorCor", null, ["tinto", "branco"]);
 
-            var resultbranco = new ActionResult<string?>(melhorCor, "branco");
-            var ruleFrango = new Rule<string?>("ruleFrango", pratoPrincipal, OperatorType.Equals, "frango");
-            var rulePeixe = new Rule<string?>("rulePeixe", pratoPrincipal, OperatorType.Equals, "peixe");
+            var resultbranco = new ActionResult<string>(melhorCor, "branco");
+            var ruleFrango = new Rule<string>("ruleFrango", pratoPrincipal, OperatorType.Equals, "frango");
+            var rulePeixe = new Rule<string>("rulePeixe", pratoPrincipal, OperatorType.Equals, "peixe");
             var regraFrangoOuPeixe = new ComplexRule("ruleFrangoOuPeixe", resultbranco, ruleFrango, boolOperator, rulePeixe);
 
             regraFrangoOuPeixe.IsMet().Should().Be(expectedResul);
