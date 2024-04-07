@@ -1,13 +1,9 @@
-﻿using RuleEngine.Domain;
-using RuleEngine.Domain.ValueTypes;
+﻿namespace WindowsForms;
 
-namespace WindowsForms
+public class Utils
 {
-    public class Utils
+    public static void ShowErrorMessage(string message)
     {
-        public static void ShowErrorMessage(string message)
-        {
-            MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
+        MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
     }
 }

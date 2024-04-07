@@ -3,7 +3,7 @@
     public class BoolValue : Value<bool?>
     {
         public override string Name { get; }
-        public override bool? CurrentValue { get; set; }
+        public sealed override bool? CurrentValue { get; set; }
         public override bool UserInputable { get; }
 
         public override VariableType Type => VariableType.Bool;

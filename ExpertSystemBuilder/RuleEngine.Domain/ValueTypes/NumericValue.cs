@@ -3,7 +3,7 @@
     public class NumericValue : Value<double?>
     {
         public override string Name { get; }
-        public override double? CurrentValue { get; set; }
+        public sealed override double? CurrentValue { get; set; }
         public override VariableType Type => VariableType.Numeric;
 
         public override bool UserInputable { get; }

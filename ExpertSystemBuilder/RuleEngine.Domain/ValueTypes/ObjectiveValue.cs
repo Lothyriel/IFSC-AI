@@ -3,7 +3,7 @@
 public class ObjectiveValue : Value<string?>
 {
     public override string Name { get; }
-    public override string? CurrentValue { get; set; }
+    public sealed override string? CurrentValue { get; set; }
     public HashSet<string> PossibleValues { get; }
     public override VariableType Type => VariableType.Objective;
     public override bool UserInputable { get; }

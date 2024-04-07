@@ -25,9 +25,4 @@ public abstract class Result
     }
 }
 
-public class NoOp : Result
-{
-    public NoOp()
-    {
-    }
-}
+public class NoOp : Result;

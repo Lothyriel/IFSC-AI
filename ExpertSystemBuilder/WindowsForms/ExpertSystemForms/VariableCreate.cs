@@ -40,7 +40,7 @@ namespace WindowsForms.ExpertSystemForms
                 return;
             }
             ESBuilder.Variables.Add(value);
-            MainScreen.Instance!.OpenFormPanel(new ESEdit(ESBuilder));
+            MainScreen.Instance!.OpenFormPanel(new EsEdit(ESBuilder));
         }
 
         private HashSet<string> ObjectiveValuesToHashSet()

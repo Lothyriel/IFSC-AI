@@ -17,7 +17,7 @@ public abstract class Value
         return type switch
         {
             VariableType.Bool => BoolValue.Valid(name, value, userInputable),
-            VariableType.Objective => ObjectiveValue.Valid(name, value, userInputable, objectiveValues!),
+            VariableType.Objective => ObjectiveValue.Valid(name, value, userInputable, objectiveValues),
             VariableType.Numeric => NumericValue.Valid(name, value, userInputable),
             _ => throw new InvalidEnumType(type),
         };

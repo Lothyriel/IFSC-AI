@@ -1,6 +1,6 @@
 ﻿namespace WindowsForms.ExpertSystemForms
 {
-    partial class ESEdit
+    partial class EsEdit
     {
         /// <summary>
         /// Required designer variable.
@@ -103,7 +103,7 @@
             this.Controls.Add(this.bt_AddRule);
             this.Controls.Add(this.lb_Rules);
             this.Controls.Add(this.lb_Variables);
-            this.Name = "ESEdit";
+            this.Name = "EsEdit";
             this.Text = "ES";
             this.ResumeLayout(false);
             this.PerformLayout();

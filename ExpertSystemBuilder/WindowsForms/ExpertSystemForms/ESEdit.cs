@@ -2,9 +2,9 @@
 
 namespace WindowsForms.ExpertSystemForms
 {
-    public partial class ESEdit : Form
+    public partial class EsEdit : Form
     {
-        public ESEdit(EsBuilder eSBuilder)
+        public EsEdit(EsBuilder eSBuilder)
         {
             InitializeComponent();
             ESBuilder = eSBuilder;

@@ -1,6 +1,7 @@
 ﻿using RuleEngine.Domain.Results;
 using RuleEngine.Domain.Rules;
 using RuleEngine.Domain.ValueTypes;
+// ReSharper disable InconsistentNaming
 
 namespace RuleEngine.Domain;
 
