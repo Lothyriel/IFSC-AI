@@ -6,27 +6,12 @@ public abstract class Value
     public abstract bool UserInputable { get; }
     public abstract object? GetValue();
     public abstract void SetValue(object? value);
-
     public abstract VariableType Type { get; }
-
-    public static (Value?, string) CreateValue(VariableType type, string name, string value, bool userInputable, HashSet<string> objectiveValues)
-    {
-        if (name == "")
-            return (null, "Please type a valid name");
-
-        return type switch
-        {
-            VariableType.Bool => BoolValue.Valid(name, value, userInputable),
-            VariableType.Objective => ObjectiveValue.Valid(name, value, userInputable, objectiveValues),
-            VariableType.Numeric => NumericValue.Valid(name, value, userInputable),
-            _ => throw new InvalidEnumType(type),
-        };
-    }
 }
 
 public abstract class Value<T> : Value
 {
-    public abstract T CurrentValue { get; set; }
+    protected abstract T CurrentValue { get; set; }
     protected abstract bool EvaluateFurther(OperatorType operatorTypeValue, T value);
     public abstract bool Equals(T v2);
     public abstract bool NotEquals(T v2);
@@ -59,11 +44,4 @@ public enum OperatorType
     Greater,
     LesserOrEquals,
     GreaterOrEquals
-}
-    
-public enum VariableType
-{
-    Numeric,
-    Bool,
-    Objective,
 }

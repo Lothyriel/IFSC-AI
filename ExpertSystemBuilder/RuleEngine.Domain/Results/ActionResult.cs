@@ -15,7 +15,7 @@ public class ActionResult<T> : Result, IAction
 
     public void Perform()
     {
-        Variable.CurrentValue = NewValue;
+        Variable.SetValue(NewValue);
     }
 
     public override string ToString()

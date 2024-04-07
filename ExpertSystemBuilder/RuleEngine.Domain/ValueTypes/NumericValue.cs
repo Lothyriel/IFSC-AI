@@ -3,7 +3,7 @@
 public class NumericValue : Value<double?>
 {
     public override string Name { get; }
-    public sealed override double? CurrentValue { get; set; }
+    protected sealed override double? CurrentValue { get; set; }
     public override VariableType Type => VariableType.Numeric;
 
     public override bool UserInputable { get; }
@@ -33,18 +33,6 @@ public class NumericValue : Value<double?>
     public bool Lesser(double? v2)
     {
         return CurrentValue < v2;
-    }
-
-    public static (NumericValue?, string) Valid(string name, string value, bool userInputable)
-    {
-        var isNumber = double.TryParse(value, out double doubleValue);
-        if (value != "" && !isNumber)
-        {
-            return (null, "Value is not a number");
-        }
-
-        double? currentValue = isNumber ? doubleValue : null;
-        return (new NumericValue(name, currentValue, userInputable), "OK");
     }
 
     public bool GreaterOrEquals(double? v2)
