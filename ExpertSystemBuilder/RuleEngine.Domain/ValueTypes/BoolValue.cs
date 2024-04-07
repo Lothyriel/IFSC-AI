@@ -29,9 +29,10 @@
         {
             throw new InvalidOperator(operatorTypeValue, typeof(BoolValue));
         }
+        
         public static (BoolValue?, string) Valid(string name, string value, bool userInputable)
         {
-            var isBool = bool.TryParse(value, out bool boolValue);
+            var isBool = bool.TryParse(value, out var boolValue);
             if (value != "" && !isBool)
             {
                 return (null, "Value is not 'true' or 'false'");

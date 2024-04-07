@@ -1,16 +1,15 @@
 ﻿namespace RuleEngine.Domain.ValueTypes
 {
-    public abstract class ValueBase
+    public abstract class Value
     {
         public abstract string Name { get; }
-        public object? Value { get => GetValue(); set => SetValue(value); }
         public abstract bool UserInputable { get; }
-        protected abstract object? GetValue();
-        protected abstract void SetValue(object? value);
+        public abstract object? GetValue();
+        public abstract void SetValue(object? value);
 
         public abstract VariableType Type { get; }
 
-        public static (ValueBase?, string) CreateValue(VariableType type, string name, string value, bool userInputable, HashSet<string> objectiveValues)
+        public static (Value?, string) CreateValue(VariableType type, string name, string value, bool userInputable, HashSet<string> objectiveValues)
         {
             if (name == "")
                 return (null, "Please type a valid name");
@@ -25,7 +24,7 @@
         }
     }
 
-    public abstract class Value<T> : ValueBase
+    public abstract class Value<T> : Value
     {
         public abstract T CurrentValue { get; set; }
         protected abstract bool EvaluateFurther(OperatorType operatorTypeValue, T value);
@@ -40,8 +39,8 @@
                 _ => EvaluateFurther(operatorTypeValue, value),
             };
         }
-        protected override object? GetValue() => CurrentValue;
-        protected override void SetValue(object? value) => CurrentValue = (T)value!;
+        public override object? GetValue() => CurrentValue;
+        public override void SetValue(object? value) => CurrentValue = (T)value!;
 
         public override string ToString() => $"{Type}: {Name}: {(CurrentValue is null ? "null" : CurrentValue)}";
     }

@@ -62,7 +62,7 @@ namespace WindowsForms.ExpertSystemForms
 
         private void cb_Variables_SelectedValueChanged(object sender, EventArgs e)
         {
-            SyncOperationTypes(((ValueBase)cb_Variables.SelectedItem).Type);
+            SyncOperationTypes(((Value)cb_Variables.SelectedItem).Type);
 
             cb_ObjectiveTargetValue.Visible = cb_Variables.SelectedItem is ObjectiveValue;
             if (cb_Variables.SelectedItem is ObjectiveValue objValue)

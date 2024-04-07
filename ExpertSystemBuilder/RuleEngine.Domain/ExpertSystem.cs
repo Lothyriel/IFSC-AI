@@ -6,14 +6,20 @@ namespace RuleEngine.Domain;
 
 public class ExpertSystem
 {
-    public ExpertSystem(IEnumerable<ValueBase> variables, IEnumerable<IRule> rules)
+    public ExpertSystem(IEnumerable<Value> variables, IEnumerable<IRule> rules)
     {
         Variables = variables.ToDictionary(variable => variable.Name, v => v);
         Rules = rules.ToList();
     }
-
-    public Dictionary<string, ValueBase> Variables { get; }
+    
     public List<IRule> Rules { get; }
+    private Dictionary<string, Value> Variables { get; }
+    
+    public void SetVariable(string variableName, object? value)
+    {
+        var variable = Variables[variableName];
+        variable.SetValue(value);
+    }
 
     public Conclusion Result()
     {
@@ -28,9 +34,9 @@ public class ExpertSystem
 
             foreach (var rule in nextRules)
             {
-                if (rule.Result is IActionResult action)
+                if (rule.Result is IAction decision)
                 {
-                    action.Act();
+                    decision.Make();
                 }
                 else if (rule.Result is Conclusion obj)
                 {

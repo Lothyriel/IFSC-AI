@@ -6,7 +6,6 @@ public class ObjectiveValue : Value<string?>
     public override string? CurrentValue { get; set; }
     public HashSet<string> PossibleValues { get; }
     public override VariableType Type => VariableType.Objective;
-
     public override bool UserInputable { get; }
 
     public ObjectiveValue(string name, string? actualValue, HashSet<string> possibleValues, bool userInputable = true)

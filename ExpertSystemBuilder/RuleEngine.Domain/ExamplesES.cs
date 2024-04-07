@@ -10,23 +10,23 @@ public static class ExamplesEs
     {
         //criando variaveis
         var pratoPrincipal = new ObjectiveValue("PratoPrincipal", null, ["carneVermelha", "frango", "peixe", "massa"]);
-        var tipoMolho = new ObjectiveValue("TipoMolho", null, ["picante", "tomate"]);
         var temMolho = new BoolValue("TemMolho", null);
+        var tipoMolho = new ObjectiveValue("TipoMolho", null, ["picante", "tomate"]);
         var melhorCor = new ObjectiveValue("MelhorCor", null, ["tinto", "branco"], false);
         var melhorTipo = new ObjectiveValue("MelhorTipo", null, ["suave", "seco"], false);
 
         //SE prato == carne vermelha ENTAO cor = tinto
-        var resultTinto = new ActionResult<string?>(melhorCor, "tinto");
+        var resultTinto = new Results.Action<string?>(melhorCor, "tinto");
         var ruleCarneVermelha_Tinto = new ActionRule<string?>("ruleCarneVermelha", pratoPrincipal, OperatorType.Equals, "carneVermelha", resultTinto);
 
         //SE prato == peixe || frango ENTAO cor = branco
-        var resultBranco = new ActionResult<string?>(melhorCor, "branco");
+        var resultBranco = new Results.Action<string?>(melhorCor, "branco");
         var ruleFrango = new ActionRule<string?>("ruleFrango", pratoPrincipal, OperatorType.Equals, "frango", Result.Empty);
         var rulePeixe = new ActionRule<string?>("rulePeixe", pratoPrincipal, OperatorType.Equals, "peixe", Result.Empty);
         var ruleFrangoOuPeixe_Branco = new ComplexRule("ruleFrangoOuPeixe", resultBranco, (ruleFrango, BoolOperator.Or), (rulePeixe, null));
 
         //SE temMolho == false ENTAO tipo = suave
-        var resultSuave = new ActionResult<string?>(melhorTipo, "suave");
+        var resultSuave = new Results.Action<string?>(melhorTipo, "suave");
         var ruleNaoTemMolho_Suave = new ActionRule<bool?>("ruleNaoTemMolho", temMolho, OperatorType.Equals, false, resultSuave);
 
         //SE temMolho == true && tipoMolho == picante ENTAO tipo = suave
@@ -35,7 +35,7 @@ public static class ExamplesEs
         var ruleTemMolhoPicante_Suave = new ComplexRule("ruleTemMolhoPicante", resultSuave, (ruleTemMolho, BoolOperator.And), (rulePicante, null));
 
         //SE temMolho == true && tipoMolho == tomate ENTAO tipo = seco
-        var resultSeco = new ActionResult<string?>(melhorTipo, "seco");
+        var resultSeco = new Results.Action<string?>(melhorTipo, "seco");
         var ruleTomate = new ActionRule<string?>("ruleTomate", tipoMolho, OperatorType.Equals, "tomate", Result.Empty);
         var ruleTemMolhoTomate_Seco = new ComplexRule("ruleTemMolhoTomate", resultSeco, (ruleTemMolho, BoolOperator.And), (ruleTomate, null));
 
@@ -76,7 +76,7 @@ public static class ExamplesEs
             ruleMassa_Cabbenet
         };
 
-        var variables = new List<ValueBase>
+        var variables = new List<Value>
         {
             pratoPrincipal,
             temMolho,

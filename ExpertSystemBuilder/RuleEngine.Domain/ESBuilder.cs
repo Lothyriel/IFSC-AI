@@ -5,7 +5,7 @@ namespace RuleEngine.Domain
 {
     public class EsBuilder
     {
-        public EsBuilder(List<IRule> rules, List<ValueBase> variables)
+        public EsBuilder(List<IRule> rules, List<Value> variables)
         {
             Rules = rules;
             Variables = variables;
@@ -24,7 +24,7 @@ namespace RuleEngine.Domain
         }
 
         public List<IRule> Rules { get; }
-        public List<ValueBase> Variables { get; }
+        public List<Value> Variables { get; }
         public ExpertSystem? System { get; }
 
         public ExpertSystem Build() { return new ExpertSystem(Variables, Rules); }

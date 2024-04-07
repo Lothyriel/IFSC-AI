@@ -8,9 +8,9 @@ public abstract class ActionRule : IRule
     public abstract string Name { get; }
     public abstract bool IsMet();
     public abstract Result Result { get; }
-    public abstract ValueBase Variable { get; }
+    public abstract Value Variable { get; }
         
-    public static (ActionRule?, string) Create(string name, OperatorType type, ValueBase value, string targetValue, Result result) 
+    public static (ActionRule?, string) Create(string name, OperatorType type, Value value, string targetValue, Result result) 
     {
         if(value.Type == VariableType.Bool && bool.TryParse(targetValue, out bool boolResult))
             return (new ActionRule<bool?>(name, (BoolValue)value, type, boolResult, result), "OK");

@@ -2,18 +2,18 @@
 
 namespace RuleEngine.Domain.Results;
 
-public class ActionResult<T> : Result, IActionResult
+public class Action<T> : Result, IAction
 {
-    public ActionResult(Value<T> variable, T newValue)
+    public Action(Value<T> variable, T newValue)
     {
         Variable = variable;
         NewValue = newValue;
     }
 
-    public Value<T> Variable { get; set; }
+    public Value<T> Variable { get; init; }
     public T NewValue { get; }
 
-    public void Act()
+    public void Make()
     {
         Variable.CurrentValue = NewValue;
     }

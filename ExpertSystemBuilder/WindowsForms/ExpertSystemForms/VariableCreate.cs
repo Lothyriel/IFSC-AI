@@ -33,7 +33,7 @@ namespace WindowsForms.ExpertSystemForms
 
         private void bt_Create_Click(object sender, EventArgs e)
         {
-            (ValueBase? value, string message) = ValueBase.CreateValue((VariableType)cb_Type.SelectedItem, tb_Name.Text, tb_Value.Text, cb_UserInputable.Checked, ObjectiveValuesToHashSet());
+            (Value? value, string message) = Value.CreateValue((VariableType)cb_Type.SelectedItem, tb_Name.Text, tb_Value.Text, cb_UserInputable.Checked, ObjectiveValuesToHashSet());
             if (value == null)
             {
                 Utils.ShowErrorMessage(message);

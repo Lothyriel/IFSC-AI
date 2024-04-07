@@ -21,7 +21,7 @@ namespace Tests.Domain
                 new ActionRule<double?>("simpleRule", variable, OperatorType.Equals, 50, result)
             };
 
-            var variables = new List<ValueBase>
+            var variables = new List<Value>
             {
                 variable
             };
@@ -35,7 +35,7 @@ namespace Tests.Domain
         public void ShouldActAndResultSimleConclusion()
         {
             var variable = new NumericValue("var", 10);
-            var action = new ActionResult<double?>(variable, 50);
+            var action = new Action<double?>(variable, 50);
 
             var conclusion = new Conclusion("it's easy when you big in japan");
 
@@ -45,7 +45,7 @@ namespace Tests.Domain
                 new ActionRule<double?>("rule2",variable, OperatorType.Equals, 50, conclusion)
             };
 
-            var variables = new List<ValueBase>
+            var variables = new List<Value>
             {
                 variable,
             };
@@ -59,7 +59,7 @@ namespace Tests.Domain
         public void ShouldDeriveRuleAndResultSimleConclusion()
         {
             var variable = new NumericValue("var", 10);
-            var action = new ActionResult<double?>(variable, 50);
+            var action = new Action<double?>(variable, 50);
 
             var conclusion = new Conclusion("it's easy when you big in japan");
 
@@ -69,7 +69,7 @@ namespace Tests.Domain
                 new ActionRule<double?>("rule2",variable, OperatorType.Lesser, 50, action)
             };
 
-            var variables = new List<ValueBase>
+            var variables = new List<Value>
             {
                 variable,
             };
@@ -84,10 +84,10 @@ namespace Tests.Domain
         [TestCase(BoolOperator.And, false)]
         public void ShouldResolveComplexRule(BoolOperator boolOperator, bool expectedResul)
         {
-            var pratoPrincipal = new ObjectiveValue("PratoPrincipal", "frango", new() { "carneVermelha", "frango", "peixe" });
-            var melhorCor = new ObjectiveValue("MelhorCor", null, new() { "tinto", "branco" });
+            var pratoPrincipal = new ObjectiveValue("PratoPrincipal", "frango", ["carneVermelha", "frango", "peixe"]);
+            var melhorCor = new ObjectiveValue("MelhorCor", null, ["tinto", "branco"]);
 
-            var resultbranco = new ActionResult<string?>(melhorCor, "branco");
+            var resultbranco = new Action<string?>(melhorCor, "branco");
             var ruleFrango = new ActionRule<string?>("ruleFrango", pratoPrincipal, OperatorType.Equals, "frango", Result.Empty);
             var rulePeixe = new ActionRule<string?>("rulePeixe", pratoPrincipal, OperatorType.Equals, "peixe", Result.Empty);
             var regraFrangoOuPeixe = new ComplexRule("ruleFrangoOuPeixe", resultbranco, (ruleFrango, boolOperator), (rulePeixe, null));
@@ -99,9 +99,9 @@ namespace Tests.Domain
         public void ShouldPickRiesling()
         {
             var es = ExamplesEs.BestWinePicker();
-            es.Variables["PratoPrincipal"].Value = "frango";
-            es.Variables["TipoMolho"].Value = "picante";
-            es.Variables["TemMolho"].Value = true;
+            es.SetVariable("PratoPrincipal", "frango");
+            es.SetVariable("TipoMolho", "picante");
+            es.SetVariable("TemMolho", true);
 
             es.Result().Message.Should().Be("Melhor vinho para esta refeição é um Riesling");
         }
@@ -110,8 +110,8 @@ namespace Tests.Domain
         public void ShouldPickRiesling2()
         {
             var es = ExamplesEs.BestWinePicker();
-            es.Variables["PratoPrincipal"].Value = "peixe";
-            es.Variables["TemMolho"].Value = false;
+            es.SetVariable("PratoPrincipal", "peixe");
+            es.SetVariable("TemMolho", false);
 
             es.Result().Message.Should().Be("Melhor vinho para esta refeição é um Riesling");
         }
